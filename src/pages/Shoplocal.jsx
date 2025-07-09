@@ -9,6 +9,13 @@ import {
   User,
   MapPin,
   Eye,
+  Upload,
+  Menu,
+  Search,
+  Grid,
+  List,
+  Camera,
+  Image as ImageIcon,
 } from "lucide-react";
 
 const ShopLocal = () => {
@@ -20,8 +27,13 @@ const ShopLocal = () => {
   const [showVendorStory, setShowVendorStory] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
   const videoRef = useRef(null);
+  const fileInputRef = useRef(null);
   const videos = ["/videos/trad.mp4", "/videos/trad2.mp4"];
 
   // Handle scroll effect for navbar
@@ -82,7 +94,7 @@ const ShopLocal = () => {
       name: "Rajasthani Bandhani Saree",
       price: "₹3,500",
       image:
-        "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=300&h=300&fit=crop",
+        "/images/rajsre.jpg",
       region: "Rajasthani",
       category: "Ethnic Clothes",
       rating: 4.8,
@@ -97,7 +109,7 @@ const ShopLocal = () => {
       name: "Assamese Gamosa",
       price: "₹450",
       image:
-        "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=300&h=300&fit=crop",
+        "/images/gamosa.jpg",
       region: "Assamese",
       category: "Ethnic Clothes",
       rating: 4.6,
@@ -112,7 +124,7 @@ const ShopLocal = () => {
       name: "Jaipur Blue Pottery Vase",
       price: "₹1,200",
       image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop",
+        "/images/raj.png",
       region: "Rajasthani",
       category: "Handicrafts",
       rating: 4.9,
@@ -127,7 +139,7 @@ const ShopLocal = () => {
       name: "Mehrangarh Fort Miniature",
       price: "₹800",
       image:
-        "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=300&h=300&fit=crop",
+    "/images/meg.jpg",
       region: "Rajasthani",
       category: "Fort Souvenirs",
       rating: 4.7,
@@ -141,7 +153,7 @@ const ShopLocal = () => {
       name: "Bengali Kantha Quilt",
       price: "₹2,800",
       image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop",
+       "/images/kant.jpg",
       region: "Bengali",
       category: "Handicrafts",
       rating: 4.8,
@@ -156,7 +168,7 @@ const ShopLocal = () => {
       name: "Gujarati Bandhani Dupatta",
       price: "₹950",
       image:
-        "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=300&h=300&fit=crop",
+      "/images/gujsr.jpg",
       region: "Gujarati",
       category: "Ethnic Clothes",
       rating: 4.5,
@@ -178,12 +190,18 @@ const ShopLocal = () => {
     description: "",
   });
 
+  const [previewImage, setPreviewImage] = useState("");
+
   const filteredProducts = products.filter((product) => {
     const regionMatch =
       selectedRegion === "All" || product.region === selectedRegion;
     const categoryMatch =
       selectedCategory === "All" || product.category === selectedCategory;
-    return regionMatch && categoryMatch;
+    const searchMatch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.vendor.toLowerCase().includes(searchQuery.toLowerCase());
+    return regionMatch && categoryMatch && searchMatch;
   });
 
   const toggleWishlist = (productId) => {
@@ -198,7 +216,31 @@ const ShopLocal = () => {
     setCart((prev) => [...prev, productId]);
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        setNewProduct({ ...newProduct, image: imageUrl });
+        setPreviewImage(imageUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddProduct = () => {
+    if (
+      !newProduct.name ||
+      !newProduct.price ||
+      !newProduct.image ||
+      !newProduct.vendor ||
+      !newProduct.description
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
     const product = {
       ...newProduct,
       id: products.length + 1,
@@ -215,8 +257,93 @@ const ShopLocal = () => {
       vendorStory: "",
       description: "",
     });
+    setPreviewImage("");
     setShowAddProduct(false);
   };
+
+  const ProductCard = ({ product }) => (
+    <div
+      className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
+        viewMode === "list" ? "md:flex" : ""
+      }`}
+    >
+      <div
+        className={`relative ${
+          viewMode === "list" ? "md:w-48 md:flex-shrink-0" : ""
+        }`}
+      >
+        <img
+          src={product.image}
+          alt={product.name}
+          className={`w-full object-cover ${
+            viewMode === "list" ? "h-48 md:h-full" : "h-64"
+          }`}
+        />
+        <button
+          onClick={() => toggleWishlist(product.id)}
+          className={`absolute top-3 right-3 p-2 rounded-full ${
+            wishlist.includes(product.id)
+              ? "bg-red-500 text-white"
+              : "bg-white/90 text-gray-600"
+          } hover:scale-110 transition-transform shadow-md`}
+        >
+          <Heart
+            size={18}
+            fill={wishlist.includes(product.id) ? "white" : "none"}
+          />
+        </button>
+        <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+          {product.region}
+        </div>
+      </div>
+
+      <div className="p-4 md:p-6 flex-1">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-lg md:text-xl font-semibold text-gray-800 line-clamp-2">
+            {product.name}
+          </h3>
+          <div className="flex items-center space-x-1 ml-2 flex-shrink-0">
+            <Star className="text-yellow-400" size={16} fill="currentColor" />
+            <span className="text-sm text-gray-600">{product.rating}</span>
+          </div>
+        </div>
+
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {product.description}
+        </p>
+
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-xl md:text-2xl font-bold text-orange-600">
+            {product.price}
+          </span>
+          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            {product.category}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2 mb-4">
+          <User className="text-gray-400" size={16} />
+          <span className="text-sm text-gray-600 flex-1">
+            by {product.vendor}
+          </span>
+          <button
+            onClick={() => setShowVendorStory(product)}
+            className="text-blue-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
+          >
+            <Eye size={14} />
+            <span>Story</span>
+          </button>
+        </div>
+
+        <button
+          onClick={() => addToCart(product.id)}
+          className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen relative">
@@ -244,19 +371,21 @@ const ShopLocal = () => {
               : "bg-transparent"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 drop-shadow-sm">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800 drop-shadow-sm">
                     Shop Local
                   </h1>
-                  <p className="text-sm text-gray-700 drop-shadow-sm">
+                  <p className="text-xs md:text-sm text-gray-700 drop-shadow-sm">
                     Discover India's Heritage
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
+
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-4">
                 <button
                   onClick={() => setShowAddProduct(true)}
                   className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:from-green-600 hover:to-green-700 transition-colors shadow-md"
@@ -266,7 +395,7 @@ const ShopLocal = () => {
                 </button>
                 <div className="relative">
                   <ShoppingCart
-                    className="text-gray-700 drop-shadow-sm"
+                    className="text-gray-700 drop-shadow-sm cursor-pointer"
                     size={24}
                   />
                   {cart.length > 0 && (
@@ -276,14 +405,96 @@ const ShopLocal = () => {
                   )}
                 </div>
               </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="md:hidden text-gray-700 drop-shadow-sm"
+              >
+                <Menu size={24} />
+              </button>
             </div>
+
+            {/* Mobile Menu */}
+            {showMobileMenu && (
+              <div className="md:hidden mt-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4">
+                <div className="space-y-4">
+                  <button
+                    onClick={() => {
+                      setShowAddProduct(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:from-green-600 hover:to-green-700 transition-colors"
+                  >
+                    <Plus size={20} />
+                    <span>Add Product</span>
+                  </button>
+                  <div className="flex items-center justify-center space-x-2">
+                    <ShoppingCart className="text-gray-700" size={20} />
+                    <span className="text-gray-700">Cart ({cart.length})</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 py-8 pt-32">
+        <div className="max-w-7xl mx-auto px-4 py-6 pt-24 md:pt-32">
+          {/* Search and View Controls */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 md:p-6 mb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+              <div className="relative flex-1 w-full md:max-w-md">
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  placeholder="Search products, vendors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="md:hidden bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+                >
+                  <Filter size={20} />
+                  <span>Filters</span>
+                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-lg ${
+                      viewMode === "grid"
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    <Grid size={20} />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-lg ${
+                      viewMode === "list"
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    <List size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Filters */}
           <div
-            className="rounded-xl shadow-lg p-6 mb-8 relative overflow-hidden backdrop-blur-sm"
+            className={`${
+              showFilters ? "block" : "hidden md:block"
+            } rounded-xl shadow-lg p-4 md:p-6 mb-6 md:mb-8 relative overflow-hidden backdrop-blur-sm`}
             style={{
               backgroundImage: `url('/images/trad5.jpg')`,
               backgroundSize: "cover",
@@ -294,9 +505,11 @@ const ShopLocal = () => {
             <div className="relative z-10">
               <div className="flex items-center space-x-4 mb-4">
                 <Filter className="text-white" size={20} />
-                <h2 className="text-xl font-semibold text-white">Filters</h2>
+                <h2 className="text-lg md:text-xl font-semibold text-white">
+                  Filters
+                </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
                     Region
@@ -334,94 +547,21 @@ const ShopLocal = () => {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            className={`grid gap-6 md:gap-8 ${
+              viewMode === "grid"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1"
+            }`}
+          >
             {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-64 object-cover"
-                  />
-                  <button
-                    onClick={() => toggleWishlist(product.id)}
-                    className={`absolute top-3 right-3 p-2 rounded-full ${
-                      wishlist.includes(product.id)
-                        ? "bg-red-500 text-white"
-                        : "bg-white text-gray-600"
-                    } hover:scale-110 transition-transform`}
-                  >
-                    <Heart
-                      size={20}
-                      fill={wishlist.includes(product.id) ? "white" : "none"}
-                    />
-                  </button>
-                  <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {product.region}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center space-x-1">
-                      <Star
-                        className="text-yellow-400"
-                        size={16}
-                        fill="currentColor"
-                      />
-                      <span className="text-sm text-gray-600">
-                        {product.rating}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="text-gray-600 text-sm mb-3">
-                    {product.description}
-                  </p>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-orange-600">
-                      {product.price}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {product.category}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 mb-4">
-                    <User className="text-gray-400" size={16} />
-                    <span className="text-sm text-gray-600">
-                      by {product.vendor}
-                    </span>
-                    <button
-                      onClick={() => setShowVendorStory(product)}
-                      className="text-blue-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
-                    >
-                      <Eye size={14} />
-                      <span>Story</span>
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => addToCart(product.id)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
           {filteredProducts.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-800 text-lg font-medium bg-white/80 backdrop-blur-sm rounded-lg p-4 inline-block">
+              <p className="text-gray-800 text-lg font-medium bg-white/80 backdrop-blur-sm rounded-lg p-6 inline-block">
                 No products found for the selected filters.
               </p>
             </div>
@@ -431,10 +571,10 @@ const ShopLocal = () => {
         {/* Add Product Modal */}
         {showAddProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-              <div className="p-6">
+            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-4 md:p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800">
                     Add New Product
                   </h2>
                   <button
@@ -449,7 +589,7 @@ const ShopLocal = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Product Name
+                        Product Name *
                       </label>
                       <input
                         type="text"
@@ -463,7 +603,7 @@ const ShopLocal = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Price
+                        Price *
                       </label>
                       <input
                         type="text"
@@ -481,19 +621,54 @@ const ShopLocal = () => {
                     </div>
                   </div>
 
+                  {/* Image Upload */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Image URL
+                      Product Image *
                     </label>
-                    <input
-                      type="url"
-                      required
-                      value={newProduct.image}
-                      onChange={(e) =>
-                        setNewProduct({ ...newProduct, image: e.target.value })
-                      }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    />
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                          <Upload size={20} />
+                          <span>Upload Image</span>
+                        </button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        {previewImage && (
+                          <span className="text-sm text-green-600">
+                            Image uploaded!
+                          </span>
+                        )}
+                      </div>
+                      {previewImage && (
+                        <div className="relative">
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="w-32 h-32 object-cover rounded-lg border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewImage("");
+                              setNewProduct({ ...newProduct, image: "" });
+                            }}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -543,7 +718,7 @@ const ShopLocal = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Vendor Name
+                      Vendor Name *
                     </label>
                     <input
                       type="text"
@@ -561,7 +736,6 @@ const ShopLocal = () => {
                       Vendor Story
                     </label>
                     <textarea
-                      required
                       rows="3"
                       value={newProduct.vendorStory}
                       onChange={(e) =>
@@ -577,7 +751,7 @@ const ShopLocal = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Product Description
+                      Product Description *
                     </label>
                     <textarea
                       required
@@ -594,7 +768,7 @@ const ShopLocal = () => {
                     />
                   </div>
 
-                  <div className="flex space-x-4 pt-4">
+                  <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 pt-4">
                     <button
                       onClick={handleAddProduct}
                       className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-green-700 transition-colors"
@@ -617,10 +791,10 @@ const ShopLocal = () => {
         {/* Vendor Story Modal */}
         {showVendorStory && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full">
-              <div className="p-6">
+            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-4 md:p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800">
                     Meet the Artisan
                   </h2>
                   <button
@@ -637,7 +811,7 @@ const ShopLocal = () => {
                       <User className="text-white" size={32} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-800">
                         {showVendorStory.vendor}
                       </h3>
                       <p className="text-gray-600">
@@ -677,6 +851,16 @@ const ShopLocal = () => {
             </div>
           </div>
         )}
+
+        {/* Floating Action Button for Mobile */}
+        <div className="fixed bottom-6 right-6 md:hidden z-40">
+          <button
+            onClick={() => setShowAddProduct(true)}
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:from-green-600 hover:to-green-700 transition-colors"
+          >
+            <Plus size={24} />
+          </button>
+        </div>
       </div>
     </div>
   );
