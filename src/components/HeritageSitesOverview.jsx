@@ -273,17 +273,18 @@ const HeritageSitesOverview = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 px-4 py-6">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-          🇮🇳 Heritage Sites
+      <div className="text-center mb-8 px-4 sm:px-0">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1F2937] mb-3 tracking-tight">
+          🇮🇳 <span className="text-[#DC2626]">Heritage Sites</span>
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
-          AI-powered search of India's heritage sites preservation
+        <p className="text-base sm:text-lg text-gray-600 max-w-lg mx-auto leading-relaxed">
+          Discover and preserve the legacy of India's cultural heritage .
         </p>
+
         {(!GROQ_API_KEY || GROQ_API_KEY === "YOUR_GROQ_API_KEY") && (
-          <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs sm:text-sm text-yellow-700">
-            ⚠️ Groq API key not configured. Set your API key for full
-            functionality.
+          <div className="mt-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md text-sm sm:text-base max-w-md mx-auto">
+            ⚠️ <strong>Groq API key missing:</strong> Please set your API key to
+            unlock full functionality.
           </div>
         )}
       </div>

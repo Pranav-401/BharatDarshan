@@ -64,7 +64,6 @@ import LiveMap from "../components/LiveMap";
 import HeritageSitesOverview from "../components/HeritageSitesOverview";
 import CultureSlider from "../components/HeritageCarousel";
 
-
 const Dashboard = () => {
   const [activeFeature, setActiveFeature] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -294,11 +293,11 @@ const Dashboard = () => {
           <HeritageSitesOverview />
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {stats.map((stat, index) => (
               <StatCard key={index} stat={stat} />
             ))}
-          </div>
+          </div> */}
 
           {/* Multimedia & Activity Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -312,7 +311,7 @@ const Dashboard = () => {
           </div>
 
           {/* Feature Highlights */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
             <div className="bg-white/80 backdrop-blur-md rounded-xl sm:rounded-2xl border border-white/50 p-6 sm:p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
                 <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -357,10 +356,10 @@ const Dashboard = () => {
                 step.
               </p>
             </div>
-          </div>
+          </div> */}
 
           {/* Cultural Quotes Section */}
-          <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden">
+          {/* <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10 text-center">
               <Gem className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-4 opacity-80" />
@@ -374,7 +373,7 @@ const Dashboard = () => {
                 - Manusmriti | Celebrating inclusive heritage tourism
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       );
     }

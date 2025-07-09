@@ -176,7 +176,7 @@ const ChatBot = () => {
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 left-6 z-50">
       {open ? (
         <div className="w-full max-w-sm sm:max-w-md h-[600px] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-orange-200 animate-in slide-in-from-bottom-4 duration-500 relative">
           {/* Decorative Pattern Background */}
@@ -365,7 +365,6 @@ const ChatBot = () => {
           </div>
 
           {/* Rotating glow effect */}
-          
         </button>
       )}
     </div>

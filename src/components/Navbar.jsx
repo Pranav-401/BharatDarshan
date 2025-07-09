@@ -137,19 +137,29 @@ const Navbar = () => {
           {isMobileMenuOpen ? (
             <X className="w-6 h-6" />
           ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           )}
         </button>
 
-        
-
         {/* Right Side Icons */}
-        <div className="hidden lg:flex items-center space-x-4 text-white">
+        <div className="hidden lg:flex items-center space-x-4 text-black">
           <button
             onClick={handleNotificationClick}
-            className="relative p-2 hover:bg-white/10 rounded-full transition-colors duration-200"
+            className={`relative p-2 hover:bg-white/10 rounded-full transition-colors duration-200 ${
+              navDark ? "text-white" : "text-black"
+            }`}
           >
             <Bell className="w-5 h-5" />
             {hasNewNotifications && (
@@ -167,7 +177,12 @@ const Navbar = () => {
           </SignedOut>
 
           <SignedIn>
-            <Link to="/dashboard" className="flex items-center space-x-1 hover:text-gray-400 transition-colors">
+            <Link
+              to="/dashboard"
+              className={`flex items-center space-x-1 hover:text-gray-600 font-bold transition-colors duration-300 ${
+                navDark ? "text-white" : "text-black"
+              }`}
+            >
               <LayoutDashboard className="w-5 h-5" />
               <span>Dashboard</span>
             </Link>
@@ -180,7 +195,6 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-black/90 backdrop-blur-sm px-4 py-4">
           <div className="flex flex-col space-y-4 text-white text-base font-light">
-            
             <button
               onClick={handleNotificationClick}
               className="flex items-center space-x-2 hover:text-gray-300 transition-colors"
@@ -200,7 +214,11 @@ const Navbar = () => {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <Link to="/dashboard" className="flex items-center space-x-2 hover:text-gray-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link
+                to="/dashboard"
+                className="flex items-center space-x-2 hover:text-gray-400 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 <LayoutDashboard className="w-5 h-5" />
                 <span>Dashboard</span>
               </Link>
@@ -214,7 +232,9 @@ const Navbar = () => {
       {showNotifications && (
         <div className="absolute right-0 sm:right-4 mt-2 w-full sm:w-80 max-h-96 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
           <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
-            <h3 className="text-lg font-semibold text-gray-800">Upcoming Festivals</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Upcoming Festivals
+            </h3>
             <button
               onClick={() => setShowNotifications(false)}
               className="text-gray-500 hover:text-gray-700 transition-colors"
