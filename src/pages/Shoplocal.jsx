@@ -10,6 +10,11 @@ import {
   MapPin,
   Eye,
   Upload,
+  Menu,
+  Search,
+  Grid,
+  List,
+  Camera,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -22,14 +27,15 @@ const ShopLocal = () => {
   const [showVendorStory, setShowVendorStory] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
-
-  // Placeholder for video background; replace with actual video URLs in production
-  const videos = ["/videos/trad.mp4", "/videos/trad.mp4"];
+  const fileInputRef = useRef(null);
+  const videos = ["/videos/trad.mp4", "/videos/trad2.mp4"];
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -72,8 +78,7 @@ const ShopLocal = () => {
       id: 1,
       name: "Rajasthani Bandhani Saree",
       price: "₹3,500",
-      image:
-        "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=300&h=300&fit=crop",
+      image: "/images/rajsre.jpg",
       region: "Rajasthani",
       category: "Ethnic Clothes",
       rating: 4.8,
@@ -87,8 +92,7 @@ const ShopLocal = () => {
       id: 2,
       name: "Assamese Gamosa",
       price: "₹450",
-      image:
-        "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=300&h=300&fit=crop",
+      image: "/images/gamosa.jpg",
       region: "Assamese",
       category: "Ethnic Clothes",
       rating: 4.6,
@@ -102,8 +106,7 @@ const ShopLocal = () => {
       id: 3,
       name: "Jaipur Blue Pottery Vase",
       price: "₹1,200",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop",
+      image: "/images/raj.png",
       region: "Rajasthani",
       category: "Handicrafts",
       rating: 4.9,
@@ -117,8 +120,7 @@ const ShopLocal = () => {
       id: 4,
       name: "Mehrangarh Fort Miniature",
       price: "₹800",
-      image:
-        "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=300&h=300&fit=crop",
+      image: "/images/meg.jpg",
       region: "Rajasthani",
       category: "Fort Souvenirs",
       rating: 4.7,
@@ -131,8 +133,7 @@ const ShopLocal = () => {
       id: 5,
       name: "Bengali Kantha Quilt",
       price: "₹2,800",
-      image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop",
+      image: "/images/kant.jpg",
       region: "Bengali",
       category: "Handicrafts",
       rating: 4.8,
@@ -146,8 +147,7 @@ const ShopLocal = () => {
       id: 6,
       name: "Gujarati Bandhani Dupatta",
       price: "₹950",
-      image:
-        "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=300&h=300&fit=crop",
+      image: "/images/gujsr.jpg",
       region: "Gujarati",
       category: "Ethnic Clothes",
       rating: 4.5,
@@ -169,12 +169,18 @@ const ShopLocal = () => {
     description: "",
   });
 
+  const [previewImage, setPreviewImage] = useState("");
+
   const filteredProducts = products.filter((product) => {
     const regionMatch =
       selectedRegion === "All" || product.region === selectedRegion;
     const categoryMatch =
       selectedCategory === "All" || product.category === selectedCategory;
-    return regionMatch && categoryMatch;
+    const searchMatch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.vendor.toLowerCase().includes(searchQuery.toLowerCase());
+    return regionMatch && categoryMatch && searchMatch;
   });
 
   const toggleWishlist = (productId) => {
@@ -192,11 +198,11 @@ const ShopLocal = () => {
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setUploadedImage(file);
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImagePreview(e.target.result);
-        setNewProduct({ ...newProduct, image: e.target.result });
+        const imageUrl = e.target.result;
+        setNewProduct({ ...newProduct, image: imageUrl });
+        setPreviewImage(imageUrl);
       };
       reader.readAsDataURL(file);
     }
@@ -210,11 +216,10 @@ const ShopLocal = () => {
       !newProduct.vendor ||
       !newProduct.description
     ) {
-      alert(
-        "Please fill in all required fields, including uploading an image."
-      );
+      alert("Please fill in all required fields");
       return;
     }
+
     const product = {
       ...newProduct,
       id: products.length + 1,
@@ -231,26 +236,93 @@ const ShopLocal = () => {
       vendorStory: "",
       description: "",
     });
-    setUploadedImage(null);
-    setImagePreview(null);
+    setPreviewImage("");
     setShowAddProduct(false);
   };
 
-  const resetForm = () => {
-    setNewProduct({
-      name: "",
-      price: "",
-      image: "",
-      region: "Rajasthani",
-      category: "Ethnic Clothes",
-      vendor: "",
-      vendorStory: "",
-      description: "",
-    });
-    setUploadedImage(null);
-    setImagePreview(null);
-    setShowAddProduct(false);
-  };
+  const ProductCard = ({ product }) => (
+    <div
+      className={`bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
+        viewMode === "list" ? "md:flex" : ""
+      }`}
+    >
+      <div
+        className={`relative ${
+          viewMode === "list" ? "md:w-48 md:flex-shrink-0" : ""
+        }`}
+      >
+        <img
+          src={product.image}
+          alt={product.name}
+          className={`w-full object-cover ${
+            viewMode === "list" ? "h-48 md:h-full" : "h-64"
+          }`}
+        />
+        <button
+          onClick={() => toggleWishlist(product.id)}
+          className={`absolute top-3 right-3 p-2 rounded-full ${
+            wishlist.includes(product.id)
+              ? "bg-red-500 text-white"
+              : "bg-white/90 text-gray-600"
+          } hover:scale-110 transition-transform shadow-md`}
+        >
+          <Heart
+            size={18}
+            fill={wishlist.includes(product.id) ? "white" : "none"}
+          />
+        </button>
+        <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+          {product.region}
+        </div>
+      </div>
+
+      <div className="p-4 md:p-6 flex-1">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-lg md:text-xl font-semibold text-gray-800 line-clamp-2">
+            {product.name}
+          </h3>
+          <div className="flex items-center space-x-1 ml-2 flex-shrink-0">
+            <Star className="text-yellow-400" size={16} fill="currentColor" />
+            <span className="text-sm text-gray-600">{product.rating}</span>
+          </div>
+        </div>
+
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {product.description}
+        </p>
+
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-xl md:text-2xl font-bold text-orange-600">
+            {product.price}
+          </span>
+          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+            {product.category}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2 mb-4">
+          <User className="text-gray-400" size={16} />
+          <span className="text-sm text-gray-600 flex-1">
+            by {product.vendor}
+          </span>
+          <button
+            onClick={() => setShowVendorStory(product)}
+            className="text-blue-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
+          >
+            <Eye size={14} />
+            <span>Story</span>
+          </button>
+        </div>
+
+        <button
+          onClick={() => addToCart(product.id)}
+          className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -293,7 +365,7 @@ const ShopLocal = () => {
               : "bg-transparent"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="relative">
@@ -303,15 +375,17 @@ const ShopLocal = () => {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800 drop-shadow-sm">
                     Shop Local
                   </h1>
-                  <p className="text-xs sm:text-sm text-white">
+                  <p className="text-xs md:text-sm text-gray-700 drop-shadow-sm">
                     Discover India's Heritage
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
+
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-4">
                 <button
                   onClick={() => setShowAddProduct(true)}
                   className="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center space-x-1 hover:from-emerald-600 hover:to-green-700 transition-all shadow-sm hover:shadow-md touch-manipulation"
@@ -323,9 +397,10 @@ const ShopLocal = () => {
                   </span>
                 </button>
                 <div className="relative">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 hover:bg-white/30 transition-all">
-                    <ShoppingCart className="text-white" size={20} />
-                  </div>
+                  <ShoppingCart
+                    className="text-gray-700 drop-shadow-sm cursor-pointer"
+                    size={24}
+                  />
                   {cart.length > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                       {cart.length}
@@ -333,171 +408,176 @@ const ShopLocal = () => {
                   )}
                 </div>
               </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="md:hidden text-gray-700 drop-shadow-sm"
+              >
+                <Menu size={24} />
+              </button>
             </div>
+
+            {/* Mobile Menu */}
+            {showMobileMenu && (
+              <div className="md:hidden mt-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4">
+                <div className="space-y-4">
+                  <button
+                    onClick={() => {
+                      setShowAddProduct(true);
+                      setShowMobileMenu(false);
+                    }}
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:from-green-600 hover:to-green-700 transition-colors"
+                  >
+                    <Plus size={20} />
+                    <span>Add Product</span>
+                  </button>
+                  <div className="flex items-center justify-center space-x-2">
+                    <ShoppingCart className="text-gray-700" size={20} />
+                    <span className="text-gray-700">Cart ({cart.length})</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pt-24 sm:pt-28">
-          {/* Filters */}
-          <div className="relative rounded-lg shadow-md p-4 sm:p-6 mb-6 bg-white/10 backdrop-blur-md border border-white/10">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-white/20 rounded-full">
-                <Filter className="text-white" size={16} />
+        <div className="max-w-7xl mx-auto px-4 py-6 pt-24 md:pt-32">
+          {/* Search and View Controls */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 md:p-6 mb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+              <div className="relative flex-1 w-full md:max-w-md">
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  placeholder="Search products, vendors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Filters
-              </h2>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="md:hidden bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+                >
+                  <Filter size={20} />
+                  <span>Filters</span>
+                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 rounded-lg ${
+                      viewMode === "grid"
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    <Grid size={20} />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 rounded-lg ${
+                      viewMode === "list"
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    <List size={20} />
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs sm:text-sm text-white font-semibold mb-2">
-                  Region
-                </label>
-                <select
-                  value={selectedRegion}
-                  onChange={(e) => setSelectedRegion(e.target.value)}
-                  className="w-full border-0 rounded-full py-3 px-2 focus:ring-2 focus:ring-orange-500/50 bg-white/90 text-sm"
-                  aria-label="Select region"
-                >
-                  {regions.map((region) => (
-                    <option key={region} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </select>
+          </div>
+
+          {/* Filters */}
+          <div
+            className={`${
+              showFilters ? "block" : "hidden md:block"
+            } rounded-xl shadow-lg p-4 md:p-6 mb-6 md:mb-8 relative overflow-hidden backdrop-blur-sm`}
+            style={{
+              backgroundImage: `url('/images/trad5.jpg')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="relative z-10">
+              <div className="flex items-center space-x-4 mb-4">
+                <Filter className="text-white" size={20} />
+                <h2 className="text-lg md:text-xl font-semibold text-white">
+                  Filters
+                </h2>
               </div>
-              <div>
-                <label className="block text-xs sm:text-sm text-white font-semibold mb-2">
-                  Category
-                </label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full border-0 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500/50 bg-white/90 text-sm"
-                  aria-label="Select category"
-                >
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Region
+                  </label>
+                  <select
+                    value={selectedRegion}
+                    onChange={(e) => setSelectedRegion(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 backdrop-blur-sm"
+                  >
+                    {regions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Category
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 backdrop-blur-sm"
+                  >
+                    {categories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div
+            className={`grid gap-6 md:gap-8 ${
+              viewMode === "grid"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1"
+            }`}
+          >
             {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="group bg-white/95 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-white/10 touch-manipulation"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-48 sm:h-56 causes hydration error object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <button
-                    onClick={() => toggleWishlist(product.id)}
-                    className={`absolute top-2 right-2 p-2 rounded-full transition-all ${
-                      wishlist.includes(product.id)
-                        ? "bg-red-500 text-white"
-                        : "bg-white/90 text-gray-600 hover:bg-white"
-                    } hover:scale-110 touch-manipulation`}
-                    aria-label={
-                      wishlist.includes(product.id)
-                        ? "Remove from wishlist"
-                        : "Add to wishlist"
-                    }
-                  >
-                    <Heart
-                      size={16}
-                      fill={wishlist.includes(product.id) ? "white" : "none"}
-                    />
-                  </button>
-                  <div className="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                    {product.region}
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-800 group-hover:text-orange-600 line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-full">
-                      <Star
-                        className="text-yellow-400"
-                        size={14}
-                        fill="current TributeErrorColor"
-                      />
-                      <span className="text-xs font-semibold text-gray-700">
-                        {product.rating}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-600 mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-lg sm:text-xl font-bold text-orange-600">
-                      {product.price}
-                    </span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                      {product.category}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2 mb-3">
-                    <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center">
-                      <User className="text-white" size={12} />
-                    </div>
-                    <span className="text-xs font-medium text-gray-700">
-                      {product.vendor}
-                    </span>
-                    <button
-                      onClick={() => setShowVendorStory(product)}
-                      className="text-blue-500 hover:text-blue-600 text-xs font-semibold flex items-center space-x-1 hover:underline touch-manipulation"
-                      aria-label="View vendor story"
-                    >
-                      <Eye size={12} />
-                      <span>Story</span>
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => addToCart(product.id)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-sm hover:shadow-md touch-manipulation"
-                    aria-label="Add to cart"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
           {filteredProducts.length === 0 && (
-            <div className="text-center py-8">
-              <div className="bg-white/20 rounded-lg p-6 inline-block border border-white/20">
-                <p className="text-white text-lg font-semibold">
-                  No products found
-                </p>
-                <p className="text-white/80 text-sm mt-2">
-                  Try adjusting your filters
-                </p>
-              </div>
+            <div className="text-center py-12">
+              <p className="text-gray-800 text-lg font-medium bg-white/80 backdrop-blur-sm rounded-lg p-6 inline-block">
+                No products found for the selected filters.
+              </p>
             </div>
           )}
         </div>
 
         {/* Add Product Modal */}
         {showAddProduct && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="relative bg-white rounded-lg w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-lg">
-              <div className="p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-4 md:p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800">
                     Add New Product
                   </h2>
                   <button
@@ -509,35 +589,89 @@ const ShopLocal = () => {
                   </button>
                 </div>
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      Product Name
-                    </label>
-                    <input
-                      type="text"
-                      value={newProduct.name}
-                      required
-                      onChange={(e) =>
-                        setNewProduct({ ...newProduct, name: e.target.value })
-                      }
-                      className="w-full border border-gray-200 rounded-full px-4 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
-                      placeholder="Enter product name"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Product Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={newProduct.name}
+                        onChange={(e) =>
+                          setNewProduct({ ...newProduct, name: e.target.value })
+                        }
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Price *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="₹1,000"
+                        value={newProduct.price}
+                        onChange={(e) =>
+                          setNewProduct({
+                            ...newProduct,
+                            price: e.target.value,
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
                   </div>
+
+                  {/* Image Upload */}
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      Price
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Product Image *
                     </label>
-                    <input
-                      type="text"
-                      value={newProduct.price}
-                      required
-                      onChange={(e) =>
-                        setNewProduct({ ...newProduct, price: e.target.value })
-                      }
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
-                      placeholder="₹1,000"
-                    />
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                          <Upload size={20} />
+                          <span>Upload Image</span>
+                        </button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        {previewImage && (
+                          <span className="text-sm text-green-600">
+                            Image uploaded!
+                          </span>
+                        )}
+                      </div>
+                      {previewImage && (
+                        <div className="relative">
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="w-32 h-32 object-cover rounded-lg border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewImage("");
+                              setNewProduct({ ...newProduct, image: "" });
+                            }}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
@@ -632,8 +766,8 @@ const ShopLocal = () => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      Vendor Name
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Vendor Name *
                     </label>
                     <input
                       type="text"
@@ -664,8 +798,8 @@ const ShopLocal = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      Product Description
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Product Description *
                     </label>
                     <textarea
                       rows="3"
@@ -681,7 +815,8 @@ const ShopLocal = () => {
                       placeholder="Brief description of the product..."
                     />
                   </div>
-                  <div className="flex space-x-3 pt-4">
+
+                  <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 pt-4">
                     <button
                       onClick={handleAddProduct}
                       className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 text-white py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-green-700 transition-all shadow-sm hover:shadow-md touch-manipulation"
@@ -705,11 +840,11 @@ const ShopLocal = () => {
 
         {/* Vendor Story Modal */}
         {showVendorStory && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-lg">
-              <div className="p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-4 md:p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800">
                     Meet the Artisan
                   </h2>
                   <button
@@ -731,7 +866,7 @@ const ShopLocal = () => {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-800">
                         {showVendorStory.vendor}
                       </h3>
                       <p className="text-orange-600 text-xs sm:text-sm font-medium flex items-center space-x-1">
@@ -796,6 +931,16 @@ const ShopLocal = () => {
             </div>
           </div>
         )}
+
+        {/* Floating Action Button for Mobile */}
+        <div className="fixed bottom-6 right-6 md:hidden z-40">
+          <button
+            onClick={() => setShowAddProduct(true)}
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:from-green-600 hover:to-green-700 transition-colors"
+          >
+            <Plus size={24} />
+          </button>
+        </div>
       </div>
     </div>
   );
