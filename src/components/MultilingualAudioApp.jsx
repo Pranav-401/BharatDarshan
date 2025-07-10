@@ -42,7 +42,7 @@ const MultilingualAudioApp = () => {
   const [transcribedText, setTranscribedText] = useState("");
   const [inputText, setInputText] = useState("");
   const [sourceLanguage, setSourceLanguage] = useState("en-US");
-  const [targetLanguage, setTargetLanguage] = useState("es-ES");
+  const [targetLanguage, setTargetLanguage] = useState("hi-IN");
   const [activeTab, setActiveTab] = useState("text-to-speech");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
@@ -55,11 +55,23 @@ const MultilingualAudioApp = () => {
   const speechUtteranceRef = useRef(null);
 
   // Embedded GROQ API key
-  const apiKey =
-   import.meta.env.VITE_XAI_API_KEY;
+  const apiKey = import.meta.env.VITE_XAI_API_KEY;
 
   const languages = [
     { code: "en-US", name: "English (US)", flag: "🇺🇸" },
+    { code: "hi-IN", name: "Hindi (India)", flag: "🇮🇳" },
+    { code: "bn-IN", name: "Bengali (India)", flag: "🇮🇳" },
+    { code: "te-IN", name: "Telugu (India)", flag: "🇮🇳" },
+    { code: "ta-IN", name: "Tamil (India)", flag: "🇮🇳" },
+    { code: "gu-IN", name: "Gujarati (India)", flag: "🇮🇳" },
+    { code: "kn-IN", name: "Kannada (India)", flag: "🇮🇳" },
+    { code: "ml-IN", name: "Malayalam (India)", flag: "🇮🇳" },
+    { code: "mr-IN", name: "Marathi (India)", flag: "🇮🇳" },
+    { code: "pa-IN", name: "Punjabi (India)", flag: "🇮🇳" },
+    { code: "or-IN", name: "Odia (India)", flag: "🇮🇳" },
+    { code: "as-IN", name: "Assamese (India)", flag: "🇮🇳" },
+    { code: "ne-NP", name: "Nepali (Nepal)", flag: "🇳🇵" },
+    { code: "ur-PK", name: "Urdu (Pakistan)", flag: "🇵🇰" },
     { code: "es-ES", name: "Spanish (Spain)", flag: "🇪🇸" },
     { code: "fr-FR", name: "French (France)", flag: "🇫🇷" },
     { code: "de-DE", name: "German (Germany)", flag: "🇩🇪" },
@@ -69,8 +81,11 @@ const MultilingualAudioApp = () => {
     { code: "ja-JP", name: "Japanese (Japan)", flag: "🇯🇵" },
     { code: "ko-KR", name: "Korean (South Korea)", flag: "🇰🇷" },
     { code: "ar-SA", name: "Arabic (Saudi Arabia)", flag: "🇸🇦" },
-    { code: "hi-IN", name: "Hindi (India)", flag: "🇮🇳" },
     { code: "ru-RU", name: "Russian (Russia)", flag: "🇷🇺" },
+    { code: "th-TH", name: "Thai (Thailand)", flag: "🇹🇭" },
+    { code: "vi-VN", name: "Vietnamese (Vietnam)", flag: "🇻🇳" },
+    { code: "id-ID", name: "Indonesian (Indonesia)", flag: "🇮🇩" },
+    { code: "ms-MY", name: "Malay (Malaysia)", flag: "🇲🇾" },
   ];
 
   useEffect(() => {
@@ -88,7 +103,7 @@ const MultilingualAudioApp = () => {
       speechSynthesis.onvoiceschanged = null;
       speechSynthesis.cancel();
       if (audioUrlRef.current) {
-        URL.revokeObjectURL(audiUrlRef.current);
+        URL.revokeObjectURL(audioUrlRef.current);
       }
       if (mediaRecorderRef.current && isRecording) {
         mediaRecorderRef.current.stop();
@@ -102,6 +117,19 @@ const MultilingualAudioApp = () => {
 
       const languageMap = {
         "en-US": "English",
+        "hi-IN": "Hindi",
+        "bn-IN": "Bengali",
+        "te-IN": "Telugu",
+        "ta-IN": "Tamil",
+        "gu-IN": "Gujarati",
+        "kn-IN": "Kannada",
+        "ml-IN": "Malayalam",
+        "mr-IN": "Marathi",
+        "pa-IN": "Punjabi",
+        "or-IN": "Odia",
+        "as-IN": "Assamese",
+        "ne-NP": "Nepali",
+        "ur-PK": "Urdu",
         "es-ES": "Spanish",
         "fr-FR": "French",
         "de-DE": "German",
@@ -111,8 +139,11 @@ const MultilingualAudioApp = () => {
         "ja-JP": "Japanese",
         "ko-KR": "Korean",
         "ar-SA": "Arabic",
-        "hi-IN": "Hindi",
         "ru-RU": "Russian",
+        "th-TH": "Thai",
+        "vi-VN": "Vietnamese",
+        "id-ID": "Indonesian",
+        "ms-MY": "Malay",
       };
 
       const targetLanguageName = languageMap[targetLang] || targetLang;
@@ -741,38 +772,52 @@ const MultilingualAudioApp = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Transcribed & Translated Text
               </label>
-              <div className="bg-white/50 border border-white/30 p-4 rounded-lg min-h-[80px] max-h-[200px] overflow-y-auto">
-                {isProcessing ? (
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
-                    <span className="text-sm">Processing audio...</span>
-                  </div>
-                ) : transcribedText ? (
-                  <p className="text-gray-800 text-sm leading-relaxed">
-                    {transcribedText}
-                  </p>
-                ) : (
-                  <p className="text-gray-500 italic text-sm">
-                    Transcribed text will appear here...
-                  </p>
+              <div className="relative">
+                <textarea
+                  value={transcribedText}
+                  onChange={(e) => setTranscribedText(e.target.value)}
+                  placeholder="Transcribed text will appear here..."
+                  className="w-full p-3 bg-white/70 border border-white/50 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none text-sm"
+                  rows={4}
+                />
+                {transcribedText && (
+                  <button
+                    onClick={handlePlayTranslation}
+                    disabled={isProcessing}
+                    className={`absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded text-white text-xs transition-all duration-300 ${
+                      isProcessing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-orange-500 hover:bg-orange-600 transform hover:scale-105"
+                    }`}
+                  >
+                    <Volume2 size={12} />
+                    Play
+                  </button>
                 )}
               </div>
             </div>
+
+            {isProcessing && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
+                Processing audio...
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === "audio-to-audio" && (
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-200">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
               <div className="flex items-center gap-2 mb-2">
                 <Headphones className="w-5 h-5 text-blue-600" />
-                <h3 className="font-semibold text-blue-900">
-                  Audio Translation
-                </h3>
+                <span className="text-sm font-medium text-blue-800">
+                  Audio-to-Audio Translation
+                </span>
               </div>
-              <p className="text-blue-800 text-sm">
-                Record or upload audio in the source language, and it will be
-                automatically transcribed and translated to the target language.
+              <p className="text-sm text-blue-700">
+                Record or upload audio in one language and get audio output in
+                another language.
               </p>
             </div>
 
@@ -784,11 +829,11 @@ const MultilingualAudioApp = () => {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-all duration-300 ${
                     isProcessing
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 transform hover:scale-105"
+                      : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transform hover:scale-105"
                   }`}
                 >
                   <Mic size={16} />
-                  <span className="text-sm">Start Recording</span>
+                  <span className="text-sm">Record Audio</span>
                 </button>
               ) : (
                 <button
@@ -825,9 +870,9 @@ const MultilingualAudioApp = () => {
             {audioBlob && (
               <div className="bg-white/50 p-4 rounded-lg border border-white/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <FileAudio className="w-5 h-5 text-orange-500" />
+                  <FileAudio className="w-5 h-5 text-purple-500" />
                   <span className="text-sm font-medium text-gray-700">
-                    Audio Controls
+                    Original Audio
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -841,12 +886,12 @@ const MultilingualAudioApp = () => {
                     }`}
                   >
                     <Play size={14} />
-                    Play
+                    Play Original
                   </button>
                   <button
                     onClick={pauseAudio}
                     disabled={!isPlaying}
-                    className={`flex items-center gap-2 px-3 py-1 rounded text-white text-sm transition-all duration-aw-300 ${
+                    className={`flex items-center gap-2 px-3 py-1 rounded text-white text-sm transition-all duration-300 ${
                       !isPlaying
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-yellow-500 hover:bg-yellow-600 transform hover:scale-105"
@@ -873,64 +918,75 @@ const MultilingualAudioApp = () => {
               </div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Transcribed & Translated Text
-              </label>
-              <div className="bg-white/50 border border-white/30 p-4 rounded-lg min-h-[80px] max-h-[200px] overflow-y-auto">
-                {isProcessing ? (
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
-                    <span className="text-sm">Processing audio...</span>
-                  </div>
-                ) : transcribedText ? (
-                  <p className="text-gray-800 text-sm leading-relaxed">
-                    {transcribedText}
-                  </p>
-                ) : (
-                  <p className="text-gray-500 italic text-sm">
-                    Transcribed text will appear here...
-                  </p>
-                )}
-              </div>
-            </div>
-
             {transcribedText && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={handlePlayTranslation}
-                  disabled={isProcessing}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-all duration-300 ${
-                    isProcessing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 transform hover:scale-105"
-                  }`}
-                >
-                  <Volume2 size={16} />
-                  <span className="text-sm">Play Translation</span>
-                </button>
-                {isPlaying && (
+              <div className="bg-white/50 p-4 rounded-lg border border-white/30">
+                <div className="flex items-center gap-2 mb-2">
+                  <MessageCircle className="w-5 h-5 text-orange-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Translated Text
+                  </span>
+                </div>
+                <p className="text-sm text-gray-700 mb-3 p-3 bg-white/70 rounded-lg border border-white/50">
+                  {transcribedText}
+                </p>
+                <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={stopSpeech}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-all duration-300 transform hover:scale-105"
+                    onClick={handlePlayTranslation}
+                    disabled={isProcessing}
+                    className={`flex items-center gap-2 px-3 py-1 rounded text-white text-sm transition-all duration-300 ${
+                      isProcessing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-orange-500 hover:bg-orange-600 transform hover:scale-105"
+                    }`}
                   >
-                    <VolumeX size={16} />
-                    <span className="text-sm">Stop</span>
+                    <Volume2 size={14} />
+                    Play Translation
                   </button>
-                )}
+                  {isPlaying && (
+                    <button
+                      onClick={stopSpeech}
+                      className="flex items-center gap-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm transition-all duration-300 transform hover:scale-105"
+                    >
+                      <VolumeX size={14} />
+                      Stop
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {isProcessing && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin"></div>
+                Processing audio translation...
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Language Information */}
+      {/* Language Info */}
       <div className="bg-white/50 backdrop-blur-md rounded-xl p-4 border border-white/30">
-        <div className="flex items-center gap-2 mb-3">
-          <Globe className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-gray-800">Language Selection</h3>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Globe className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-gray-700">
+              Language Settings
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              const temp = sourceLanguage;
+              setSourceLanguage(targetLanguage);
+              setTargetLanguage(temp);
+            }}
+            className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs transition-all duration-300 transform hover:scale-105"
+          >
+            <Languages size={12} />
+            Swap
+          </button>
         </div>
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-gray-600">From:</span>
             <span className="font-medium text-gray-800">
@@ -948,17 +1004,48 @@ const MultilingualAudioApp = () => {
         </div>
       </div>
 
-      {/* Hidden Audio Element */}
-      <audio ref={audioRef} style={{ display: "none" }} />
+      {/* Features */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-orange-100 to-red-100 p-4 rounded-xl border border-orange-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-5 h-5 text-orange-600" />
+            <span className="text-sm font-medium text-orange-800">
+              Smart Translation
+            </span>
+          </div>
+          <p className="text-xs text-orange-700">
+            Powered by advanced AI for accurate translations across multiple
+            languages.
+          </p>
+        </div>
 
-      {/* Footer */}
-      <div className="text-center text-sm text-gray-500 mt-8">
-        <div className="flex items-center justify-center gap-1">
-          <Sparkles className="w-4 h-4" />
-          <span>Powered by GROQ API & Web Speech API</span>
-          <Sparkles className="w-4 h-4" />
+        <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-xl border border-purple-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="w-5 h-5 text-purple-600" />
+            <span className="text-sm font-medium text-purple-800">
+              Real-time Processing
+            </span>
+          </div>
+          <p className="text-xs text-purple-700">
+            Fast speech recognition and synthesis for seamless communication.
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-100 to-cyan-100 p-4 rounded-xl border border-blue-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Star className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-blue-800">
+              Multi-modal Support
+            </span>
+          </div>
+          <p className="text-xs text-blue-700">
+            Text, speech, and audio file processing in one unified interface.
+          </p>
         </div>
       </div>
+
+      {/* Hidden audio element */}
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };

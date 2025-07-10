@@ -99,7 +99,7 @@ const HeritageCarousel = () => {
       id: "rani-ki-vav",
       name: "Rani Ki Vav",
       location: "Gujarat",
-      image: "/images/Rani ki Vav36.jpg",
+      image: "/images/Ran1.jpg",
       description: "Stepwell architectural wonder",
       route: "/heridetails/RaniKiVav",
     },
