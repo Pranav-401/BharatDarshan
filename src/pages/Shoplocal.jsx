@@ -14,7 +14,6 @@ import {
   Search,
   Grid,
   List,
-  Camera,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -32,9 +31,8 @@ const ShopLocal = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  const fileInputRef = useRef(null);
+  const inputFileRef = useRef(null);
   const videoRef = useRef(null);
-  const fileInputRef = useRef(null);
   const videos = ["/videos/trad.mp4", "/videos/trad2.mp4"];
 
   // Handle scroll effect for navbar
@@ -226,6 +224,21 @@ const ShopLocal = () => {
       rating: 4.0 + Math.random() * 0.9,
     };
     setProducts([...products, product]);
+    setNewProduct({
+      name: "",
+      price: "",
+      image: "",
+      region: "Rajasthani",
+      category: "Ethnic Clothes",
+      vendor: "",
+      vendorStory: "",
+      description: "",
+    });
+    setPreviewImage("");
+    setShowAddProduct(false);
+  };
+
+  const resetForm = () => {
     setNewProduct({
       name: "",
       price: "",
@@ -581,7 +594,7 @@ const ShopLocal = () => {
                     Add New Product
                   </h2>
                   <button
-                    onClick={() => resetForm()}
+                    onClick={resetForm}
                     className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-all touch-manipulation"
                     aria-label="Close modal"
                   >
@@ -629,72 +642,27 @@ const ShopLocal = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Product Image *
                     </label>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        >
-                          <Upload size={20} />
-                          <span>Upload Image</span>
-                        </button>
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
-                        {previewImage && (
-                          <span className="text-sm text-green-600">
-                            Image uploaded!
-                          </span>
-                        )}
-                      </div>
-                      {previewImage && (
-                        <div className="relative">
-                          <img
-                            src={previewImage}
-                            alt="Preview"
-                            className="w-32 h-32 object-cover rounded-lg border"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPreviewImage("");
-                              setNewProduct({ ...newProduct, image: "" });
-                            }}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      Product Image
-                    </label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-orange-500 transition-all">
                       <input
                         type="file"
-                        ref={fileInputRef}
+                        ref={inputFileRef}
                         onChange={handleImageUpload}
                         accept="image/*"
                         className="hidden"
                         aria-label="Upload product image"
                       />
-                      {imagePreview ? (
+                      {previewImage ? (
                         <div className="text-center">
                           <img
-                            src={imagePreview}
+                            src={previewImage}
                             alt="Preview"
                             className="max-w-full h-40 object-cover rounded-lg mx-auto mb-3"
                           />
                           <button
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => {
+                              setPreviewImage("");
+                              setNewProduct({ ...newProduct, image: "" });
+                            }}
                             className="bg-orange-500 text-white px-3 py-1.5 rounded-lg hover:bg-orange-600 text-sm font-medium touch-manipulation"
                           >
                             Change Image
@@ -709,7 +677,7 @@ const ShopLocal = () => {
                             Upload product image
                           </p>
                           <button
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => inputFileRef.current?.click()}
                             className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 mx-auto text-sm font-medium touch-manipulation"
                           >
                             <Upload size={16} />
@@ -719,6 +687,7 @@ const ShopLocal = () => {
                       )}
                     </div>
                   </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
