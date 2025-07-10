@@ -1,102 +1,125 @@
-# 🇮🇳 BharatDarshan – Rediscover India with AI
+BharatDarshan – Rediscover India with AI
+BharatDarshan is an innovative AI-powered web application designed to revolutionize the way tourists and locals explore India's rich heritage. This platform offers an interactive, culturally immersive experience, blending cutting-edge technology with India's timeless history, traditions, and stories.
+🚀 Features
+🕵️‍♂️ Scam Detection
 
-**BharatDarshan** is a powerful AI-powered web application designed to transform the way tourists and locals experience Indian heritage. It provides a smart, interactive, and culturally rich platform for exploring monuments, traditions, and stories tied to India’s glorious past — with real-time assistance and deep insights.
+Detects potential scams in ticket pricing, travel agents, and local guides.
+Ensures fair pricing and protects users from common tourist traps.
 
----
+🏛️ Heritage Info Hub
 
-## 🚀 Features
+Access YouTube documentaries, detailed historical insights, folk songs, stories, and dynastic histories.
+Sort and rank heritage sites by popularity, region, or cultural significance.
 
-### 🕵️‍♂️ Scam Detection
-- Identifies potential scams in ticket pricing, travel agents, and local guides.
-- Ensures tourists are charged fairly and remain aware of common traps.
+🛍️ E-Commerce Marketplace
 
-### 🏛️ Heritage Info Hub
-- Watch YouTube documentaries, read detailed historical info, and explore folk songs, stories, and dynasties.
-- Rank and sort heritage sites by popularity, region, or cultural value.
+Purchase authentic Indian clothes, souvenirs, monument replicas, and travel gear.
+Promotes local artisans and traditional handicrafts.
 
-### 🛍️ E-Commerce Marketplace
-- Shop authentic Indian clothes, souvenirs, monument replicas, and travel gear.
-- Supports local artisans and promotes traditional handicrafts.
+🗣️ Multilingual Audio Intelligence
 
-### 🗣️ Multilingual Audio Intelligence
-- Text to Audio: Converts heritage descriptions into multiple regional languages.
-- Audio to Text: Transcribe guide narrations or user queries into readable text.
-- Audio to Audio: Real-time language translations for cross-lingual communication.
+Text-to-Audio: Converts heritage descriptions into multiple regional languages.
+Audio-to-Text: Transcribes guide narrations or user queries into readable text.
+Audio-to-Audio: Real-time language translation for seamless cross-lingual communication.
 
-### 🖼️ AI-Powered Image Recognition
-- Upload or click a picture of any fort, temple, or monument.
-- Get instant recognition and detailed historical/cultural context of the site.
+🖼️ AI-Powered Image Recognition
 
-### ⏳ Time-Travel Mode
-- Reimagine what a place looked like 200 years ago using AI-generated visuals.
-- Travel to the past and visualize the site during its prime.
+Upload or capture images of forts, temples, or monuments.
+Receive instant recognition and detailed historical/cultural context.
 
-### 🌱 Carbon Tracker
-- Uses AI to estimate the carbon footprint of visiting a site.
-- Suggests eco-friendly tourism practices.
-- Encourages users to offset emissions through carbon credits.
+⏳ Time-Travel Mode
 
-### 📆 Festival & Event Notifications
-- Get notified about local cultural festivals, religious events, and traditional fairs happening near heritage sites.
+Visualize heritage sites as they appeared 200 years ago with AI-generated imagery.
+Experience the past by exploring sites in their historical prime.
 
-### 🗺️ Interactive Heritage Map
-- View all heritage sites on a single map.
-- Get directions, estimated travel time, and nearby attractions based on your current location.
+🌱 Carbon Tracker
 
----
+Estimates the carbon footprint of visiting heritage sites.
+Promotes eco-friendly tourism practices and offers carbon offset options.
 
-## 🧠 Tech Stack & Integrations
+📆 Festival & Event Notifications
 
-| Feature                  | Technology Used        |
-|--------------------------|------------------------|
-| Authentication           | [Clerk.dev](https://clerk.dev) |
-| AI-Powered Features      | [GROQ API](https://groq.com)   |
-| Maps & Navigation        | OpenRouteService |
-| UI Framework             | React + TailwindCSS     |
-| Media & Content Handling | YouTube API, Text-to-Speech, etc |
+Stay updated on local cultural festivals, religious events, and traditional fairs near heritage sites.
 
----
+🗺️ Interactive Heritage Map
 
-## 💡 Inspiration
+Explore all heritage sites on an interactive map.
+Get directions, estimated travel times, and nearby attractions based on your location.
 
-India is not just a country; it's a civilization. BharatDarshan is our tribute to the timeless spirit of India — fusing tradition with technology to give users an unforgettable journey through history, folklore, and culture.
-
----
-
-## 🔐 Login & Access
-
-- User authentication is securely handled by **Clerk**.
+🧠 Tech Stack & Integrations
 
 
-🛠️ Installation & Run
+
+Feature
+Technology Used
+
+
+
+Authentication
+Clerk.dev
+
+
+AI-Powered Features
+GROQ API
+
+
+Maps & Navigation
+OpenRouteService
+
+
+UI Framework
+React + TailwindCSS
+
+
+Media & Content Handling
+YouTube API, Text-to-Speech, etc.
+
+
+💡 Inspiration
+India is a living civilization with a heritage that spans millennia. BharatDarshan combines tradition with modern technology to create an unforgettable journey through India's history, folklore, and culture.
+🔐 Login & Access
+
+Secure user authentication is powered by Clerk.
+
+🛠️ Installation & Setup
 Follow these steps to set up and run BharatDarshan locally:
+Prerequisites
 
-1. Clone the Repository
-bash
-Copy
-Edit
+Node.js (v16 or higher)
+Git
+API keys for Clerk, GROQ, and YouTube Data API
+
+Steps
+
+Clone the Repository
 git clone https://github.com/jidnesh007/BharatDarshan.git
 cd BharatDarshan
-2. Install Dependencies
-Make sure you have Node.js installed. Then run:
 
-bash
-Copy
-Edit
+
+Install Dependencies
 npm install
-3. Set Environment Variables
-Create a .env file in the root directory and add the required keys:
 
-bash
-Copy
-Edit
+
+Set Environment VariablesCreate a .env file in the root directory and add the following keys:
 VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 GROQ_API_KEY=your_groq_api_key
 VITE_YOUTUBE_API_KEY=your_youtube_api_key
-4. Run the Development Server
-bash
-Copy
-Edit
+
+
+Run the Development Server
 npm run dev
-5. Open in Browser
-Visit http://localhost:5173 to explore BharatDarshan.
+
+
+Open in BrowserVisit http://localhost:5173 to explore BharatDarshan.
+
+
+📝 Contributing
+We welcome contributions to enhance BharatDarshan! To contribute:
+
+Fork the repository.
+Create a new branch (git checkout -b feature/your-feature).
+Commit your changes (git commit -m 'Add your feature').
+Push to the branch (git push origin feature/your-feature).
+Open a Pull Request.
+
+BharatDarshan – Embark on a journey to rediscover India's soul with AI.
