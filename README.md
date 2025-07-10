@@ -68,4 +68,35 @@ India is not just a country; it's a civilization. BharatDarshan is our tribute t
 - User authentication is securely handled by **Clerk**.
 
 
+🛠️ Installation & Run
+Follow these steps to set up and run BharatDarshan locally:
 
+1. Clone the Repository
+bash
+Copy
+Edit
+git clone https://github.com/jidnesh007/BharatDarshan.git
+cd BharatDarshan
+2. Install Dependencies
+Make sure you have Node.js installed. Then run:
+
+bash
+Copy
+Edit
+npm install
+3. Set Environment Variables
+Create a .env file in the root directory and add the required keys:
+
+bash
+Copy
+Edit
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+GROQ_API_KEY=your_groq_api_key
+VITE_YOUTUBE_API_KEY=your_youtube_api_key
+4. Run the Development Server
+bash
+Copy
+Edit
+npm run dev
+5. Open in Browser
+Visit http://localhost:5173 to explore BharatDarshan.
