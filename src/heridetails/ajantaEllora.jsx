@@ -372,7 +372,7 @@ const AjantaElloraCaves = () => {
           <iframe
             width="100%"
             height="100%"
-            src={video.id}
+            src={`https://www.youtube.com/embed/${video.id}`}
             title={video.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -438,28 +438,28 @@ const AjantaElloraCaves = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <button
         onClick={handleBackClick}
-        className="fixed top-6 left-6 z-50 bg-white/95 backdrop-blur-sm rounded-full p-3 shadow-xl hover:shadow-2xl transition-all duration-300 group border border-gray-200 hover:scale-110"
+        className="fixed top-4 left-4 z-50 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-xl hover:shadow-2xl transition-all duration-300 group border border-gray-200 hover:scale-110 md:top-6 md:left-6 md:p-3"
       >
-        <ArrowLeft className="w-6 h-6 text-gray-700 group-hover:text-purple-600 transition-colors" />
+        <ArrowLeft className="w-5 h-5 text-gray-700 group-hover:text-purple-600 transition-colors md:w-6 md:h-6" />
       </button>
-      <div className="fixed top-6 right-6 z-50 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-xl border border-gray-200">
-        <div className="flex items-center space-x-3">
+      <div className="fixed top-4 right-4 z-50 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-2 shadow-xl border border-gray-200 md:top-6 md:right-6 md:px-4 md:py-3">
+        <div className="flex items-center space-x-2 md:space-x-3">
           <div className="relative">
-            <MapPin className="w-5 h-5 text-red-500" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+            <MapPin className="w-4 h-4 text-red-500 md:w-5 md:h-5" />
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping md:w-3 md:h-3"></div>
           </div>
           <div>
-            <span className="text-sm font-bold text-gray-800 block">
+            <span className="text-xs font-bold text-gray-800 block md:text-sm">
               Aurangabad, Maharashtra
             </span>
-            <span className="text-xs text-gray-500 flex items-center gap-1">
-              <Users className="w-3 h-3" />
+            <span className="text-[10px] text-gray-500 flex items-center gap-1 md:text-xs">
+              <Users className="w-2 h-2 md:w-3 md:h-3" />
               {visitorsCount.toLocaleString()} visitors today
             </span>
           </div>
         </div>
       </div>
-      <div className="relative w-full h-screen overflow-hidden">
+      <div className="relative w-full h-[60vh] md:h-screen overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
           style={{
@@ -470,35 +470,35 @@ const AjantaElloraCaves = () => {
         </div>
         <button
           onClick={prevImage}
-          className="absolute left-8 top-1/2 transform -translate-y-1/2 text-white hover:text-purple-300 transition-all duration-300 z-20 bg-black/30 backdrop-blur-sm rounded-full p-4 hover:bg-black/50 hover:scale-110"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-purple-300 transition-all duration-300 z-20 bg-black/30 backdrop-blur-sm rounded-full p-2 hover:bg-black/50 hover:scale-110 md:left-8 md:p-4"
         >
-          <ChevronLeft className="w-10 h-10" />
+          <ChevronLeft className="w-6 h-6 md:w-10 md:h-10" />
         </button>
         <button
           onClick={nextImage}
-          className="absolute right-8 top-1/2 transform -translate-y-1/2 text-white hover:text-purple-300 transition-all duration-300 z-20 bg-black/30 backdrop-blur-sm rounded-full p-4 hover:bg-black/50 hover:scale-110"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-purple-300 transition-all duration-300 z-20 bg-black/30 backdrop-blur-sm rounded-full p-2 hover:bg-black/50 hover:scale-110 md:right-8 md:p-4"
         >
-          <ChevronRight className="w-10 h-10" />
+          <ChevronRight className="w-6 h-6 md:w-10 md:h-10" />
         </button>
-        <div className="absolute top-32 left-12 z-20 max-w-3xl">
-          <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-            <h1 className="text-6xl font-bold text-white drop-shadow-2xl mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text">
+        <div className="absolute top-16 left-4 z-20 max-w-[90%] md:top-32 md:left-12 md:max-w-3xl">
+          <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-4 md:p-8 border border-white/20">
+            <h1 className="text-3xl font-bold text-white drop-shadow-2xl mb-2 bg-gradient-to-r from-white to-purple-200 bg-clip-text md:text-6xl md:mb-4">
               {carouselImages[currentImageIndex].title}
             </h1>
-            <p className="text-2xl text-white/90 mb-6 drop-shadow-lg">
+            <p className="text-lg text-white/90 drop-shadow-lg md:text-2xl md:mb-6">
               {carouselImages[currentImageIndex].description}
             </p>
           </div>
         </div>
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 md:bottom-12 md:space-x-4 z-20">
           {carouselImages.map((image, index) => (
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
               className={`group relative transition-all duration-500 ${
                 index === currentImageIndex
-                  ? "w-12 h-4 bg-white shadow-2xl"
-                  : "w-4 h-4 bg-white/50 hover:bg-white/75"
+                  ? "w-8 h-3 bg-white shadow-2xl md:w-12 md:h-4"
+                  : "w-3 h-3 bg-white/50 hover:bg-white/75 md:w-4 md:h-4"
               } rounded-full overflow-hidden`}
             >
               {index === currentImageIndex && (
@@ -508,375 +508,390 @@ const AjantaElloraCaves = () => {
           ))}
         </div>
       </div>
-      <div className="w-full bg-gradient-to-br from-white to-gray-50">
-        <div className="flex">
-          <div className="flex-1 p-16">
-            <div className="max-w-4xl">
-              <h2 className="text-6xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-12 leading-tight">
-                A Testament to Ancient Art
-                <br />
-                <span className="text-4xl">and Rock-Cut Architecture</span>
-              </h2>
-              <div className="prose prose-xl text-gray-700 space-y-8 mb-12">
-                <p className="text-2xl leading-relaxed">
-                  The Ajanta and Ellora Caves in Aurangabad, Maharashtra, are
-                  masterpieces of ancient Indian rock-cut architecture. Dating
-                  from the 2nd century BCE to the 10th century CE, these caves
-                  represent a harmonious blend of Buddhist, Hindu, and Jain art.
-                </p>
-                <p className="text-xl leading-relaxed text-gray-600">
-                  The Ajanta Caves are famed for their vibrant frescoes and
-                  sculptures, while Ellora’s Kailasa Temple is an architectural
-                  marvel carved from a single rock. These UNESCO World Heritage
-                  Sites reflect India’s rich cultural and religious heritage.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Clock className="w-8 h-8 text-purple-600" />
-                    <h3 className="font-bold text-xl text-gray-800">
-                      Construction
-                    </h3>
-                  </div>
-                  <p className="text-3xl font-bold text-purple-600 mb-1">
-                    2nd BCE-10th CE
-                  </p>
-                  <p className="text-sm text-gray-600">Multiple dynasties</p>
-                </div>
-                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-100 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Users className="w-8 h-8 text-blue-600" />
-                    <h3 className="font-bold text-xl text-gray-800">
-                      Artisans
-                    </h3>
-                  </div>
-                  <p className="text-3xl font-bold text-blue-600 mb-1">
-                    Thousands
-                  </p>
-                  <p className="text-sm text-gray-600">Skilled craftsmen</p>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Award className="w-8 h-8 text-green-600" />
-                    <h3 className="font-bold text-xl text-gray-800">
-                      Recognition
-                    </h3>
-                  </div>
-                  <p className="text-lg font-bold text-green-600 mb-1">
-                    UNESCO Heritage
-                  </p>
-                  <p className="text-sm text-gray-600">Designated in 1983</p>
-                </div>
-              </div>
-              <div className="mb-12">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-4xl font-bold text-gray-800">
-                    Immersive Experiences
+      <div className="w-full bg-gradient-to-br from-white to-gray-50 flex flex-col md:flex-row">
+        <div className="flex-1 p-4 md:p-16">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 leading-tight md:text-6xl md:mb-12">
+              A Testament to Ancient Art
+              <br />
+              <span className="text-2xl md:text-4xl">
+                and Rock-Cut Architecture
+              </span>
+            </h2>
+            <div className="prose prose-lg text-gray-700 space-y-6 mb-8 md:prose-xl md:space-y-8 md:mb-12">
+              <p className="text-lg leading-relaxed md:text-2xl">
+                The Ajanta and Ellora Caves in Aurangabad, Maharashtra, are
+                masterpieces of ancient Indian rock-cut architecture. Dating
+                from the 2nd century BCE to the 10th century CE, these caves
+                represent a harmonious blend of Buddhist, Hindu, and Jain art.
+              </p>
+              <p className="text-base leading-relaxed text-gray-600 md:text-xl">
+                The Ajanta Caves are famed for their vibrant frescoes and
+                sculptures, while Ellora’s Kailasa Temple is an architectural
+                marvel carved from a single rock. These UNESCO World Heritage
+                Sites reflect India’s rich cultural and religious heritage.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 mb-8 md:grid-cols-3 md:gap-6 md:mb-12">
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100 hover:shadow-lg transition-all duration-300 md:p-6">
+                <div className="flex items-center gap-2 mb-2 md:gap-3 md:mb-3">
+                  <Clock className="w-6 h-6 text-purple-600 md:w-8 md:h-8" />
+                  <h3 className="font-bold text-lg text-gray-800 md:text-xl">
+                    Construction
                   </h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Volume2 className="w-4 h-4" />
-                    <span>Use headphones for best experience</span>
-                  </div>
                 </div>
-                <div className="flex flex-wrap gap-3 mb-8">
-                  {Object.keys(videoContent).map((category) => {
-                    const IconComponent = categoryIcons[category];
-                    return (
-                      <button
-                        key={category}
-                        onClick={() => setActiveVideoCategory(category)}
-                        className={`group flex items-center space-x-3 px-6 py-3 rounded-2xl transition-all duration-500 hover:scale-105 ${
-                          activeVideoCategory === category
-                            ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-2xl"
-                            : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-md"
-                        }`}
-                      >
-                        <IconComponent
-                          className={`w-5 h-5 transition-transform group-hover:scale-110 ${
-                            activeVideoCategory === category
-                              ? "text-white"
-                              : "text-purple-500"
-                          }`}
-                        />
-                        <span className="font-medium">
-                          {categoryLabels[category]}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {videoContent[activeVideoCategory].map((video, index) => (
-                    <EnhancedVideoCard
-                      key={`${activeVideoCategory}-${index}`}
-                      video={video}
-                      index={index}
-                    />
-                  ))}
-                </div>
+                <p className="text-2xl font-bold text-purple-600 mb-1 md:text-3xl">
+                  2nd BCE-10th CE
+                </p>
+                <p className="text-xs text-gray-600 md:text-sm">
+                  Multiple dynasties
+                </p>
               </div>
-              <div className="mb-12">
-                <h3 className="text-4xl font-bold text-gray-800 mb-8">
-                  Historical Timeline
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4 border border-blue-100 hover:shadow-lg transition-all duration-300 md:p-6">
+                <div className="flex items-center gap-2 mb-2 md:gap-3 md:mb-3">
+                  <Users className="w-6 h-6 text-blue-600 md:w-8 md:h-8" />
+                  <h3 className="font-bold text-lg text-gray-800 md:text-xl">
+                    Artisans
+                  </h3>
+                </div>
+                <p className="text-2xl font-bold text-blue-600 mb-1 md:text-3xl">
+                  Thousands
+                </p>
+                <p className="text-xs text-gray-600 md:text-sm">
+                  Skilled craftsmen
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100 hover:shadow-lg transition-all duration-300 md:p-6">
+                <div className="flex items-center gap-2 mb-2 md:gap-3 md:mb-3">
+                  <Award className="w-6 h-6 text-green-600 md:w-8 md:h-8" />
+                  <h3 className="font-bold text-lg text-gray-800 md:text-xl">
+                    Recognition
+                  </h3>
+                </div>
+                <p className="text-base font-bold text-green-600 mb-1 md:text-lg">
+                  UNESCO Heritage
+                </p>
+                <p className="text-xs text-gray-600 md:text-sm">
+                  Designated in 1983
+                </p>
+              </div>
+            </div>
+            <div className="mb-8 md:mb-12">
+              <div className="flex flex-col items-start justify-between mb-6 md:flex-row md:items-center md:mb-8">
+                <h3 className="text-3xl font-bold text-gray-800 md:text-4xl">
+                  Immersive Experiences
                 </h3>
-                <div className="relative">
-                  <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
-                  {[
-                    {
-                      year: "200 BCE",
-                      event: "Ajanta Caves begin to be carved",
-                      color: "red",
-                    },
-                    {
-                      year: "600 CE",
-                      event: "Ellora Caves construction starts",
-                      color: "blue",
-                    },
-                    {
-                      year: "800 CE",
-                      event: "Kailasa Temple completed in Ellora",
-                      color: "green",
-                    },
-                    {
-                      year: "1000 CE",
-                      event: "Final phase of Ellora Caves completed",
-                      color: "purple",
-                    },
-                    {
-                      year: "1983",
-                      event: "Designated UNESCO World Heritage Site",
-                      color: "yellow",
-                    },
-                    {
-                      year: "2019",
-                      event: "Restoration efforts intensified",
-                      color: "pink",
-                    },
-                  ].map((item, index) => (
-                    <div
-                      key={index}
-                      className="relative flex items-center mb-8 group"
-                    >
-                      <div
-                        className={`w-6 h-6 rounded-full border-4 border-white shadow-lg bg-${item.color}-500 relative z-10 group-hover:scale-125 transition-transform duration-300`}
-                      ></div>
-                      <div className="ml-8 bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex-1 group-hover:shadow-2xl transition-all duration-300">
-                        <div className="flex items-center gap-4">
-                          <span
-                            className={`text-2xl font-bold text-${item.color}-600`}
-                          >
-                            {item.year}
-                          </span>
-                          <span className="text-gray-700 text-lg">
-                            {item.event}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-2 text-xs text-gray-500 mt-2 md:mt-0 md:text-sm">
+                  <Volume2 className="w-3 h-3 md:w-4 md:h-4" />
+                  <span>Use headphones for best experience</span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="w-96 bg-gradient-to-br from-gray-50 to-white border-l border-gray-200 p-8 sticky top-0 h-screen overflow-y-auto">
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 mb-8 border border-orange-100">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <MapPin className="w-6 h-6 text-red-500" />
-                Location & Directions
-              </h3>
-              <div className="space-y-4">
-                <div className="bg-white/50 rounded-lg p-3">
-                  <p className="text-sm text-gray-600 mb-1">Address</p>
-                  <p className="font-semibold text-gray-800 text-sm">
-                    Ajanta & Ellora Caves, Aurangabad, Maharashtra 431001
-                  </p>
-                </div>
-                <div className="relative rounded-lg overflow-hidden border border-orange-200 shadow-sm">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.147647431692!2d75.31011231458627!3d20.025048586508153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd90f4b8b7b7b7b%3A0x5b5b5b5b5b5b5b5b!2sEllora%20Caves!5e0!3m2!1sen!2sin!4v1625123456789!5m2!1sen!2sin"
-                    width="100%"
-                    height="200"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Ajanta & Ellora Caves Location"
-                    className="rounded-lg"
-                  ></iframe>
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1">
-                    <span className="text-xs font-medium text-gray-700">
-                      Interactive Map
-                    </span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="bg-white/50 rounded-lg p-3">
-                    <p className="text-gray-600 text-xs">Distance from</p>
-                    <p className="font-bold text-orange-600">Mumbai: 350km</p>
-                  </div>
-                  <div className="bg-white/50 rounded-lg p-3">
-                    <p className="text-gray-600 text-xs">Aurangabad Airport</p>
-                    <p className="font-bold text-orange-600">30km away</p>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg p-3 border border-blue-200">
-                  <p className="text-sm font-medium text-blue-800 flex items-center gap-2">
-                    🚗 Getting There
-                  </p>
-                  <p className="text-xs text-blue-600 mt-1">
-                    Take NH160 from Mumbai for a scenic 6-hour drive to
-                    Aurangabad
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 mb-8 border border-blue-100">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Cloud className="w-6 h-6 text-blue-500" />
-                Current Weather in Aurangabad
-              </h3>
-              {loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                </div>
-              ) : weather ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      {getWeatherIcon(weather.weather?.[0]?.main)}
-                      <span className="text-3xl font-bold text-gray-800">
-                        {Math.round(weather.main?.temp)}°C
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-600 capitalize">
-                        {weather.weather?.[0]?.description}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Feels like {Math.round(weather.main?.feels_like)}°C
-                      </p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="bg-white/50 rounded-lg p-3">
-                      <p className="text-gray-600">Humidity</p>
-                      <p className="font-bold text-blue-600">
-                        {weather.main?.humidity}%
-                      </p>
-                    </div>
-                    <div className="bg-white/50 rounded-lg p-3">
-                      <p className="text-gray-600">Visibility</p>
-                      <p className="font-bold text-blue-600">
-                        {weather.visibility
-                          ? `${weather.visibility / 1000}km`
-                          : "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-3 border border-orange-200">
-                    <p className="text-sm font-medium text-orange-800">
-                      Best photography time
-                    </p>
-                    <p className="text-xs text-orange-600">
-                      Morning: 7:00-9:00 AM for optimal lighting in the caves
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-gray-500">Weather data unavailable</p>
-              )}
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 mb-8 border border-green-100">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Calendar className="w-6 h-6 text-green-500" />
-                Visit Information
-              </h3>
-              <div className="space-y-4 text-sm">
-                <div className="flex justify-between items-center py-2 border-b border-green-100">
-                  <span className="text-gray-600">Today's Date</span>
-                  <span className="font-semibold text-gray-800">
-                    {formatDate()}
-                  </span>
-                </div>
-                <div className="bg-white/50 rounded-lg p-4 space-y-3">
-                  <h4 className="font-semibold text-green-800">
-                    Opening Hours
-                  </h4>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between">
-                      <span>Daily (except Monday)</span>
-                      <span className="font-medium">9:00 AM - 5:30 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Monday</span>
-                      <span className="font-medium text-red-600">Closed</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white/50 rounded-lg p-4 space-y-3">
-                  <h4 className="font-semibold text-green-800">Entry Fees</h4>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between">
-                      <span>Indian Citizens</span>
-                      <span className="font-medium">₹40</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Foreign Tourists</span>
-                      <span className="font-medium">₹600</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>SAARC/BIMSTEC</span>
-                      <span className="font-medium">₹40</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-3 border border-purple-200">
-                  <p className="text-xs font-medium text-purple-800">
-                    💡 Pro Tip
-                  </p>
-                  <p className="text-xs text-purple-600 mt-1">
-                    Hire a guide to fully appreciate the intricate details of
-                    the cave art!
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-purple-500" />
-                Did You Know?
-              </h3>
-              <div className="space-y-4">
-                {amazingFacts.map((fact, index) => {
-                  const IconComponent = fact.icon;
+              <div className="flex flex-wrap gap-2 mb-6 md:gap-3 md:mb-8">
+                {Object.keys(videoContent).map((category) => {
+                  const IconComponent = categoryIcons[category];
                   return (
-                    <div
-                      key={index}
-                      className={`bg-white rounded-lg p-4 border border-gray-100 transition-all duration-300 cursor-pointer hover:shadow-lg ${
-                        index === currentFact
-                          ? "ring-2 ring-purple-200 shadow-md"
-                          : ""
+                    <button
+                      key={category}
+                      onClick={() => setActiveVideoCategory(category)}
+                      className={`group flex items-center space-x-2 px-4 py-2 rounded-2xl transition-all duration-500 hover:scale-105 text-sm md:space-x-3 md:px-6 md:py-3 ${
+                        activeVideoCategory === category
+                          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-2xl"
+                          : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-md"
                       }`}
-                      onClick={() => setCurrentFact(index)}
                     >
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100">
-                          <IconComponent className={`w-4 h-4 ${fact.color}`} />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-800 text-sm mb-1">
-                            {fact.title}
-                          </h4>
-                          <p className="text-xs text-gray-600 leading-relaxed">
-                            {fact.fact}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                      <IconComponent
+                        className={`w-4 h-4 transition-transform group-hover:scale-110 md:w-5 md:h-5 ${
+                          activeVideoCategory === category
+                            ? "text-white"
+                            : "text-purple-500"
+                        }`}
+                      />
+                      <span className="font-medium">
+                        {categoryLabels[category]}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+                {videoContent[activeVideoCategory].map((video, index) => (
+                  <EnhancedVideoCard
+                    key={`${activeVideoCategory}-${index}`}
+                    video={video}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="mb-8 md:mb-12">
+              <h3 className="text-3xl font-bold text-gray-800 mb-6 md:text-4xl md:mb-8">
+                Historical Timeline
+              </h3>
+              <div className="relative">
+                <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full md:left-8"></div>
+                {[
+                  {
+                    year: "200 BCE",
+                    event: "Ajanta Caves begin to be carved",
+                    color: "red",
+                  },
+                  {
+                    year: "600 CE",
+                    event: "Ellora Caves construction starts",
+                    color: "blue",
+                  },
+                  {
+                    year: "800 CE",
+                    event: "Kailasa Temple completed in Ellora",
+                    color: "green",
+                  },
+                  {
+                    year: "1000 CE",
+                    event: "Final phase of Ellora Caves completed",
+                    color: "purple",
+                  },
+                  {
+                    year: "1983",
+                    event: "Designated UNESCO World Heritage Site",
+                    color: "yellow",
+                  },
+                  {
+                    year: "2019",
+                    event: "Restoration efforts intensified",
+                    color: "pink",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="relative flex items-center mb-6 group md:mb-8"
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full border-3 border-white shadow-lg bg-${item.color}-500 relative z-10 group-hover:scale-125 transition-transform duration-300 md:w-6 md:h-6 md:border-4`}
+                    ></div>
+                    <div className="ml-6 bg-white rounded-xl p-4 shadow-lg border border-gray-100 flex-1 group-hover:shadow-2xl transition-all duration-300 md:ml-8 md:p-6">
+                      <div className="flex flex-col gap-2 md:items-center md:flex-row md:gap-4">
+                        <span
+                          className={`text-xl font-bold text-${item.color}-600 md:text-2xl`}
+                        >
+                          {item.year}
+                        </span>
+                        <span className="text-gray-700 text-base md:text-lg">
+                          {item.event}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full p-4 md:w-96 md:bg-gradient-to-br md:from-gray-50 md:to-white md:border-l md:border-gray-200 md:p-8 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+          <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-4 mb-6 border border-orange-100 md:p-6 md:mb-8">
+            <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2 md:text-xl md:mb-4">
+              <MapPin className="w-5 h-5 text-red-500 md:w-6 md:h-6" />
+              Location & Directions
+            </h3>
+            <div className="space-y-3 md:space-y-4">
+              <div className="bg-white/50 rounded-lg p-2 md:p-3">
+                <p className="text-xs text-gray-600 mb-1 md:text-sm">Address</p>
+                <p className="font-semibold text-gray-800 text-xs md:text-sm">
+                  Ajanta & Ellora Caves, Aurangabad, Maharashtra 431001
+                </p>
+              </div>
+              <div className="relative rounded-lg overflow-hidden border border-orange-200 shadow-sm">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3752.147647431692!2d75.31011231458627!3d20.025048586508153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd90f4b8b7b7b7b%3A0x5b5b5b5b5b5b5b5b!2sEllora%20Caves!5e0!3m2!1sen!2sin!4v1625123456789!5m2!1sen!2sin"
+                  width="100%"
+                  height="150"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ajanta & Ellora Caves Location"
+                  className="rounded-lg md:h-200"
+                ></iframe>
+                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-lg px-1 py-0.5 md:top-3 md:right-3 md:px-2 md:py-1">
+                  <span className="text-[10px] font-medium text-gray-700 md:text-xs">
+                    Interactive Map
+                  </span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs md:gap-3 md:text-sm">
+                <div className="bg-white/50 rounded-lg p-2 md:p-3">
+                  <p className="text-gray-600 text-[11px] md:text-xs">
+                    Distance from
+                  </p>
+                  <p className="font-bold text-orange-600">Mumbai: 350km</p>
+                </div>
+                <div className="bg-white/50 rounded-lg p-2 md:p-3">
+                  <p className="text-gray-600 text-[11px] md:text-xs">
+                    Aurangabad Airport
+                  </p>
+                  <p className="font-bold text-orange-600">30km away</p>
+                </div>
+              </div>
+              <div className="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg p-2 border border-blue-200 md:p-3">
+                <p className="text-xs font-medium text-blue-800 flex items-center gap-1 md:text-sm md:gap-2">
+                  🚗 Getting There
+                </p>
+                <p className="text-[11px] text-blue-600 mt-1 md:text-xs">
+                  Take NH160 from Mumbai for a scenic 6-hour drive to Aurangabad
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4 mb-6 border border-blue-100 md:p-6 md:mb-8">
+            <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2 md:text-xl md:mb-4">
+              <Cloud className="w-5 h-5 text-blue-500 md:w-6 md:h-6" />
+              Current Weather in Aurangabad
+            </h3>
+            {loading ? (
+              <div className="flex items-center justify-center py-6 md:py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 md:h-8 md:w-8"></div>
+              </div>
+            ) : weather ? (
+              <div className="space-y-3 md:space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-space-x-2 md:space-x-3">
+                    {getWeatherIcon(weather.weather?.[0]?.main)}
+                    <span className="text-2xl font-bold text-gray-800 md:text-3xl">
+                      {Math.round(weather.main?.temp)}°C
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-600 capitalize md:text-sm">
+                      {weather.weather?.[0]?.description}
+                    </p>
+                    <p className="text-[11px] text-gray-500 md:text-xs">
+                      Feels like {Math.round(weather.main?.feels_like)}°C
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs md:gap-4 md:text-sm">
+                  <div className="bg-white/50 rounded-lg p-2 md:p-3">
+                    <p className="text-gray-600 text-[11px] md:text-xs">
+                      Humidity
+                    </p>
+                    <p className="font-bold text-blue-600">
+                      {weather.main?.humidity}%
+                    </p>
+                  </div>
+                  <div className="bg-white/50 rounded-lg p-2 md:p-3">
+                    <p className="text-gray-600 text-[11px] md:text-xs">
+                      Visibility
+                    </p>
+                    <p className="font-bold text-blue-600">
+                      {weather.visibility
+                        ? `${weather.visibility / 1000}km`
+                        : "N/A"}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-2 border border-orange-200 md:p-3">
+                  <p className="text-xs font-medium text-orange-800 md:text-sm">
+                    Best photography time
+                  </p>
+                  <p className="text-[11px] text-orange-600 md:text-xs">
+                    Morning: 7:00-9:00 AM for optimal lighting in the caves
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 text-xs md:text-sm">
+                Weather data unavailable
+              </p>
+            )}
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 mb-6 border border-green-100 md:p-6 md:mb-8">
+            <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2 md:text-xl md:mb-4">
+              <Calendar className="w-5 h-5 text-green-500 md:w-6 md:h-6" />
+              Visit Information
+            </h3>
+            <div className="space-y-3 text-xs md:space-y-4 md:text-sm">
+              <div className="flex justify-between items-center py-1 border-b border-green-100 md:py-2">
+                <span className="text-gray-600">Today's Date</span>
+                <span className="font-semibold text-gray-800">
+                  {formatDate()}
+                </span>
+              </div>
+              <div className="bg-white/50 rounded-lg p-3 space-y-2 md:p-4 md:space-y-3">
+                <h4 className="font-semibold text-green-800">Opening Hours</h4>
+                <div className="space-y-1 text-[11px] md:space-y-2 md:text-xs">
+                  <div className="flex justify-between">
+                    <span>Daily (except Monday)</span>
+                    <span className="font-medium">9:00 AM - 5:30 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Monday</span>
+                    <span className="font-medium text-red-600">Closed</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white/50 rounded-lg p-3 space-y-2 md:p-4 md:space-y-3">
+                <h4 className="font-semibold text-green-800">Entry Fees</h4>
+                <div className="space-y-1 text-[11px] md:space-y-2 md:text-xs">
+                  <div className="flex justify-between">
+                    <span>Indian Citizens</span>
+                    <span className="font-medium">₹40</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Foreign Tourists</span>
+                    <span className="font-medium">₹600</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>SAARC/BIMSTEC</span>
+                    <span className="font-medium">₹40</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-2 border border-purple-200 md:p-3">
+                <p className="text-xs font-medium text-purple-800 md:text-sm">
+                  💡 Pro Tip
+                </p>
+                <p className="text-[11px] text-purple-600 mt-1 md:text-xs">
+                  Hire a guide to fully appreciate the intricate details of the
+                  cave art!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-100 md:p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2 md:text-xl md:mb-4">
+              <Sparkles className="w-5 h-5 text-purple-500 md:w-6 md:h-6" />
+              Did You Know?
+            </h3>
+            <div className="space-y-3 md:space-y-4">
+              {amazingFacts.map((fact, index) => {
+                const IconComponent = fact.icon;
+                return (
+                  <div
+                    key={index}
+                    className={`bg-white rounded-lg p-3 border border-gray-100 transition-all duration-300 cursor-pointer hover:shadow-lg ${
+                      index === currentFact
+                        ? "ring-2 ring-purple-200 shadow-md"
+                        : ""
+                    } md:p-4`}
+                    onClick={() => setCurrentFact(index)}
+                  >
+                    <div className="flex items-start gap-2 md:gap-3">
+                      <div className="p-1.5 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 md:p-2">
+                        <IconComponent
+                          className={`w-3 h-3 ${fact.color} md:w-4 md:h-4`}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-gray-800 text-xs mb-1 md:text-sm">
+                          {fact.title}
+                        </h4>
+                        <p className="text-[11px] text-gray-600 leading-relaxed md:text-xs">
+                          {fact.fact}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

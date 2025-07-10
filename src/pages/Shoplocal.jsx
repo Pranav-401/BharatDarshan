@@ -9,6 +9,8 @@ import {
   User,
   MapPin,
   Eye,
+  Upload,
+  Image as ImageIcon,
 } from "lucide-react";
 
 const ShopLocal = () => {
@@ -20,42 +22,31 @@ const ShopLocal = () => {
   const [showVendorStory, setShowVendorStory] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
+  const fileInputRef = useRef(null);
   const videoRef = useRef(null);
-  const videos = ["/videos/trad.mp4", "/videos/trad2.mp4"];
+
+  // Placeholder for video background; replace with actual video URLs in production
+  const videos = ["/videos/trad.mp4", "/videos/trad.mp4"];
 
   // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Handle video switching
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleVideoEnd = () => {
+    const interval = setInterval(() => {
       setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
-    };
-
-    video.addEventListener("ended", handleVideoEnd);
-    return () => video.removeEventListener("ended", handleVideoEnd);
-  }, [videos.length]);
-
-  // Update video source when currentVideoIndex changes
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.src = videos[currentVideoIndex];
-      video.load();
-      video.play().catch(console.error);
-    }
-  }, [currentVideoIndex, videos]);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const regions = [
     "All",
@@ -198,7 +189,32 @@ const ShopLocal = () => {
     setCart((prev) => [...prev, productId]);
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+        setNewProduct({ ...newProduct, image: e.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddProduct = () => {
+    if (
+      !newProduct.name ||
+      !newProduct.price ||
+      !newProduct.image ||
+      !newProduct.vendor ||
+      !newProduct.description
+    ) {
+      alert(
+        "Please fill in all required fields, including uploading an image."
+      );
+      return;
+    }
     const product = {
       ...newProduct,
       id: products.length + 1,
@@ -215,62 +231,103 @@ const ShopLocal = () => {
       vendorStory: "",
       description: "",
     });
+    setUploadedImage(null);
+    setImagePreview(null);
+    setShowAddProduct(false);
+  };
+
+  const resetForm = () => {
+    setNewProduct({
+      name: "",
+      price: "",
+      image: "",
+      region: "Rajasthani",
+      category: "Ethnic Clothes",
+      vendor: "",
+      vendorStory: "",
+      description: "",
+    });
+    setUploadedImage(null);
+    setImagePreview(null);
     setShowAddProduct(false);
   };
 
   return (
-    <div className="min-h-screen relative">
-      {/* Video Background */}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background */}
       <div className="fixed inset-0 w-full h-full z-0">
         <video
           ref={videoRef}
-          className="w-full h-full object-cover opacity-98"
+          className="absolute inset-0 w-full h-full object-cover"
+          src={videos[currentVideoIndex]}
           autoPlay
+          loop
           muted
           playsInline
-        >
-          <source src={videos[currentVideoIndex]} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/80 to-red-50/80"></div>
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-white/10 to-black/30"></div>
+        <div className="absolute inset-0 opacity-20">
+          <div
+            className="absolute w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"
+            style={{ top: "20%", left: "10%", animationDuration: "4s" }}
+          ></div>
+          <div
+            className="absolute w-48 h-48 bg-yellow-300 rounded-full blur-3xl animate-pulse"
+            style={{
+              top: "60%",
+              right: "15%",
+              animationDuration: "6s",
+              animationDelay: "2s",
+            }}
+          ></div>
+        </div>
       </div>
 
       {/* Content */}
       <div className="relative z-10">
         {/* Header */}
         <header
-          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
             isScrolled
-              ? "bg-white/20 backdrop-blur-lg shadow-lg border-b border-white/30"
+              ? "bg-white/10 backdrop-blur-md shadow-md border-b border-white/10"
               : "bg-transparent"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-500 rounded-full blur-md opacity-50"></div>
+                  <div className="relative bg-white rounded-full p-2 shadow-sm">
+                    <MapPin className="text-orange-500" size={20} />
+                  </div>
+                </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 drop-shadow-sm">
+                  <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                     Shop Local
                   </h1>
-                  <p className="text-sm text-gray-700 drop-shadow-sm">
+                  <p className="text-xs sm:text-sm text-white">
                     Discover India's Heritage
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setShowAddProduct(true)}
-                  className="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:from-green-600 hover:to-green-700 transition-colors shadow-md"
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center space-x-1 hover:from-emerald-600 hover:to-green-700 transition-all shadow-sm hover:shadow-md touch-manipulation"
+                  aria-label="Add new product"
                 >
-                  <Plus size={20} />
-                  <span>Add Product</span>
+                  <Plus size={16} />
+                  <span className="text-xs sm:text-sm font-medium">
+                    Add Product
+                  </span>
                 </button>
                 <div className="relative">
-                  <ShoppingCart
-                    className="text-gray-700 drop-shadow-sm"
-                    size={24}
-                  />
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 hover:bg-white/30 transition-all">
+                    <ShoppingCart className="text-white" size={20} />
+                  </div>
                   {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                       {cart.length}
                     </span>
                   )}
@@ -280,137 +337,138 @@ const ShopLocal = () => {
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 py-8 pt-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pt-24 sm:pt-28">
           {/* Filters */}
-          <div
-            className="rounded-xl shadow-lg p-6 mb-8 relative overflow-hidden backdrop-blur-sm"
-            style={{
-              backgroundImage: `url('/images/trad5.jpg')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <div className="absolute inset-0 bg-black/50"></div>
-            <div className="relative z-10">
-              <div className="flex items-center space-x-4 mb-4">
-                <Filter className="text-white" size={20} />
-                <h2 className="text-xl font-semibold text-white">Filters</h2>
+          <div className="relative rounded-lg shadow-md p-4 sm:p-6 mb-6 bg-white/10 backdrop-blur-md border border-white/10">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="p-2 bg-white/20 rounded-full">
+                <Filter className="text-white" size={16} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
-                    Region
-                  </label>
-                  <select
-                    value={selectedRegion}
-                    onChange={(e) => setSelectedRegion(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 backdrop-blur-sm"
-                  >
-                    {regions.map((region) => (
-                      <option key={region} value={region}>
-                        {region}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
-                    Category
-                  </label>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 backdrop-blur-sm"
-                  >
-                    {categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                Filters
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs sm:text-sm text-white font-semibold mb-2">
+                  Region
+                </label>
+                <select
+                  value={selectedRegion}
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                  className="w-full border-0 rounded-full py-3 px-2 focus:ring-2 focus:ring-orange-500/50 bg-white/90 text-sm"
+                  aria-label="Select region"
+                >
+                  {regions.map((region) => (
+                    <option key={region} value={region}>
+                      {region}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs sm:text-sm text-white font-semibold mb-2">
+                  Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full border-0 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500/50 bg-white/90 text-sm"
+                  aria-label="Select category"
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                className="group bg-white/95 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-white/10 touch-manipulation"
               >
-                <div className="relative">
+                <div className="relative overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-48 sm:h-56 causes hydration error object-cover group-hover:scale-105 transition-transform duration-300"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <button
                     onClick={() => toggleWishlist(product.id)}
-                    className={`absolute top-3 right-3 p-2 rounded-full ${
+                    className={`absolute top-2 right-2 p-2 rounded-full transition-all ${
                       wishlist.includes(product.id)
                         ? "bg-red-500 text-white"
-                        : "bg-white text-gray-600"
-                    } hover:scale-110 transition-transform`}
+                        : "bg-white/90 text-gray-600 hover:bg-white"
+                    } hover:scale-110 touch-manipulation`}
+                    aria-label={
+                      wishlist.includes(product.id)
+                        ? "Remove from wishlist"
+                        : "Add to wishlist"
+                    }
                   >
                     <Heart
-                      size={20}
+                      size={16}
                       fill={wishlist.includes(product.id) ? "white" : "none"}
                     />
                   </button>
-                  <div className="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
                     {product.region}
                   </div>
                 </div>
-
-                <div className="p-6">
+                <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-semibold text-gray-800">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-800 group-hover:text-orange-600 line-clamp-1">
                       {product.name}
                     </h3>
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-full">
                       <Star
                         className="text-yellow-400"
-                        size={16}
-                        fill="currentColor"
+                        size={14}
+                        fill="current TributeErrorColor"
                       />
-                      <span className="text-sm text-gray-600">
+                      <span className="text-xs font-semibold text-gray-700">
                         {product.rating}
                       </span>
                     </div>
                   </div>
-
-                  <p className="text-gray-600 text-sm mb-3">
+                  <p className="text-xs text-gray-600 mb-3 line-clamp-2">
                     {product.description}
                   </p>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-orange-600">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-lg sm:text-xl font-bold text-orange-600">
                       {product.price}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                       {product.category}
                     </span>
                   </div>
-
-                  <div className="flex items-center space-x-2 mb-4">
-                    <User className="text-gray-400" size={16} />
-                    <span className="text-sm text-gray-600">
-                      by {product.vendor}
+                  <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-6 h-6 bg-gradient-to-r from-orange-400 to-red-400 rounded-full flex items-center justify-center">
+                      <User className="text-white" size={12} />
+                    </div>
+                    <span className="text-xs font-medium text-gray-700">
+                      {product.vendor}
                     </span>
                     <button
                       onClick={() => setShowVendorStory(product)}
-                      className="text-blue-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
+                      className="text-blue-500 hover:text-blue-600 text-xs font-semibold flex items-center space-x-1 hover:underline touch-manipulation"
+                      aria-label="View vendor story"
                     >
-                      <Eye size={14} />
+                      <Eye size={12} />
                       <span>Story</span>
                     </button>
                   </div>
-
                   <button
                     onClick={() => addToCart(product.id)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-colors"
+                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-sm hover:shadow-md touch-manipulation"
+                    aria-label="Add to cart"
                   >
                     Add to Cart
                   </button>
@@ -420,85 +478,116 @@ const ShopLocal = () => {
           </div>
 
           {filteredProducts.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-800 text-lg font-medium bg-white/80 backdrop-blur-sm rounded-lg p-4 inline-block">
-                No products found for the selected filters.
-              </p>
+            <div className="text-center py-8">
+              <div className="bg-white/20 rounded-lg p-6 inline-block border border-white/20">
+                <p className="text-white text-lg font-semibold">
+                  No products found
+                </p>
+                <p className="text-white/80 text-sm mt-2">
+                  Try adjusting your filters
+                </p>
+              </div>
             </div>
           )}
         </div>
 
         {/* Add Product Modal */}
         {showAddProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="relative bg-white rounded-lg w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-lg">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                     Add New Product
                   </h2>
                   <button
-                    onClick={() => setShowAddProduct(false)}
-                    className="text-gray-400 hover:text-gray-600"
+                    onClick={() => resetForm()}
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-all touch-manipulation"
+                    aria-label="Close modal"
                   >
-                    <X size={24} />
+                    <X size={20} />
                   </button>
                 </div>
-
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Product Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={newProduct.name}
-                        onChange={(e) =>
-                          setNewProduct({ ...newProduct, name: e.target.value })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Price
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="₹1,000"
-                        value={newProduct.price}
-                        onChange={(e) =>
-                          setNewProduct({
-                            ...newProduct,
-                            price: e.target.value,
-                          })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Image URL
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Product Name
                     </label>
                     <input
-                      type="url"
+                      type="text"
+                      value={newProduct.name}
                       required
-                      value={newProduct.image}
                       onChange={(e) =>
-                        setNewProduct({ ...newProduct, image: e.target.value })
+                        setNewProduct({ ...newProduct, name: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full border border-gray-200 rounded-full px-4 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
+                      placeholder="Enter product name"
                     />
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Price
+                    </label>
+                    <input
+                      type="text"
+                      value={newProduct.price}
+                      required
+                      onChange={(e) =>
+                        setNewProduct({ ...newProduct, price: e.target.value })
+                      }
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
+                      placeholder="₹1,000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      Product Image
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-orange-500 transition-all">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleImageUpload}
+                        accept="image/*"
+                        className="hidden"
+                        aria-label="Upload product image"
+                      />
+                      {imagePreview ? (
+                        <div className="text-center">
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            className="max-w-full h-40 object-cover rounded-lg mx-auto mb-3"
+                          />
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="bg-orange-500 text-white px-3 py-1.5 rounded-lg hover:bg-orange-600 text-sm font-medium touch-manipulation"
+                          >
+                            Change Image
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <ImageIcon className="text-gray-400" size={24} />
+                          </div>
+                          <p className="text-gray-600 text-xs mb-3">
+                            Upload product image
+                          </p>
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1 mx-auto text-sm font-medium touch-manipulation"
+                          >
+                            <Upload size={16} />
+                            <span>Upload Image</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                         Region
                       </label>
                       <select
@@ -509,7 +598,8 @@ const ShopLocal = () => {
                             region: e.target.value,
                           })
                         }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
+                        aria-label="Select product region"
                       >
                         {regions.slice(1).map((region) => (
                           <option key={region} value={region}>
@@ -519,7 +609,7 @@ const ShopLocal = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                         Category
                       </label>
                       <select
@@ -530,7 +620,8 @@ const ShopLocal = () => {
                             category: e.target.value,
                           })
                         }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
+                        aria-label="Select product category"
                       >
                         {categories.slice(1).map((category) => (
                           <option key={category} value={category}>
@@ -540,28 +631,26 @@ const ShopLocal = () => {
                       </select>
                     </div>
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                       Vendor Name
                     </label>
                     <input
                       type="text"
-                      required
                       value={newProduct.vendor}
+                      required
                       onChange={(e) =>
                         setNewProduct({ ...newProduct, vendor: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
+                      placeholder="Enter vendor name"
                     />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                       Vendor Story
                     </label>
                     <textarea
-                      required
                       rows="3"
                       value={newProduct.vendorStory}
                       onChange={(e) =>
@@ -570,40 +659,40 @@ const ShopLocal = () => {
                           vendorStory: e.target.value,
                         })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
                       placeholder="Tell the story behind this artisan or vendor..."
                     />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                       Product Description
                     </label>
                     <textarea
-                      required
-                      rows="2"
+                      rows="3"
                       value={newProduct.description}
+                      required
                       onChange={(e) =>
                         setNewProduct({
                           ...newProduct,
                           description: e.target.value,
                         })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 text-sm"
                       placeholder="Brief description of the product..."
                     />
                   </div>
-
-                  <div className="flex space-x-4 pt-4">
+                  <div className="flex space-x-3 pt-4">
                     <button
                       onClick={handleAddProduct}
-                      className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-green-700 transition-colors"
+                      className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 text-white py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-green-700 transition-all shadow-sm hover:shadow-md touch-manipulation"
+                      aria-label="Add product"
                     >
                       Add Product
                     </button>
                     <button
-                      onClick={() => setShowAddProduct(false)}
-                      className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+                      onClick={resetForm}
+                      className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-all touch-manipulation"
+                      aria-label="Cancel"
                     >
                       Cancel
                     </button>
@@ -616,61 +705,91 @@ const ShopLocal = () => {
 
         {/* Vendor Story Modal */}
         {showVendorStory && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-lg">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                     Meet the Artisan
                   </h2>
                   <button
                     onClick={() => setShowVendorStory(null)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-full transition-all touch-manipulation"
+                    aria-label="Close modal"
                   >
-                    <X size={24} />
+                    <X size={20} />
                   </button>
                 </div>
-
                 <div className="space-y-4">
                   <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                      <User className="text-white" size={32} />
+                    <div className="relative">
+                      <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                        <User className="text-white" size={24} />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         {showVendorStory.vendor}
                       </h3>
-                      <p className="text-gray-600">
-                        {showVendorStory.region} Region
+                      <p className="text-orange-600 text-xs sm:text-sm font-medium flex items-center space-x-1">
+                        <MapPin size={14} />
+                        <span>{showVendorStory.region} Region</span>
                       </p>
                     </div>
                   </div>
-
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-gray-700 leading-relaxed">
+                  <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4 border-l-2 border-orange-500">
+                    <h4 className="font-semibold text-gray-800 text-sm mb-2 flex items-center space-x-1">
+                      <Star className="text-orange-500" size={16} />
+                      <span>Artisan Story</span>
+                    </h4>
+                    <p className="text-gray-700 text-xs sm:text-sm">
                       {showVendorStory.vendorStory}
                     </p>
                   </div>
-
-                  <div className="border-t pt-4">
-                    <h4 className="font-semibold text-gray-800 mb-2">
+                  <div className="border-t border-gray-100 pt-4">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base mb-3">
                       Featured Product:
                     </h4>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 bg-gray-50 rounded-lg p-3">
                       <img
                         src={showVendorStory.image}
                         alt={showVendorStory.name}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
-                      <div>
-                        <p className="font-medium text-gray-800">
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800 text-sm sm:text-base">
                           {showVendorStory.name}
                         </p>
-                        <p className="text-orange-600 font-bold">
+                        <p className="text-gray-600 text-xs mb-2">
+                          {showVendorStory.description}
+                        </p>
+                        <p className="text-lg font-bold text-orange-600">
                           {showVendorStory.price}
                         </p>
                       </div>
                     </div>
+                  </div>
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      onClick={() => {
+                        addToCart(showVendorStory.id);
+                        setShowVendorStory(null);
+                      }}
+                      className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-sm hover:shadow-md touch-manipulation"
+                      aria-label="Add to cart"
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={() => setShowVendorStory(null)}
+                      className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-all touch-manipulation"
+                      aria-label="Close"
+                    >
+                      Close
+                    </button>
                   </div>
                 </div>
               </div>
