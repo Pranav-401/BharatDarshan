@@ -37,6 +37,7 @@ import {
   Eye,
   TreePine,
   Sparkles,
+  Coins,
   Crown,
   Gem,
   Sun,
@@ -63,6 +64,7 @@ import "leaflet/dist/leaflet.css";
 import LiveMap from "../components/LiveMap";
 import HeritageSitesOverview from "../components/HeritageSitesOverview";
 import CultureSlider from "../components/HeritageCarousel";
+import MoneyTracker from "../components/MoneyTracker";
 
 const Dashboard = () => {
   const [activeFeature, setActiveFeature] = useState("overview");
@@ -130,6 +132,16 @@ const Dashboard = () => {
       pattern: "🌿",
       heritage: "Harmony with Mother Earth",
       component: CarbonTracker,
+    },
+    {
+      id: "money-tracker",
+      name: "Money Keeper",
+      icon: Coins, 
+      description: "Grow your wealth with mindful tracking",
+      color: "from-amber-500 to-lime-600",
+      pattern: "💰",
+      heritage: "Rooted in balance",
+      component: MoneyTracker,
     },
   ];
 

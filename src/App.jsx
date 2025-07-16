@@ -21,6 +21,7 @@ import FatehpurSikri from "./heridetails/fatehpurSikri";
 import CholaTemples from "./heridetails/cholaTemples";
 import AjantaElloraCaves from "./heridetails/ajantaEllora";
 
+
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -60,6 +61,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
 
       <Route path="/live-map" element={<LiveMap />} />
+
 
       <Route path="/multilingualAudioApp" element={<MultilingualAudioApp />} />
 
